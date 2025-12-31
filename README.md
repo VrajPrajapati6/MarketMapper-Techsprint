@@ -192,7 +192,7 @@ Powered by **Gemini AI**, the system:
 ## 📦 Installation & Setup (Prototype)
 
 ```bash
-git clone https://github.com/<your-username>/marketmapper-ai.git
+git clone https://github.com/VrajPrajapati6/MarketMapper-Techsprint
 cd marketmapper-ai
 npm install
 npm start
