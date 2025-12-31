@@ -64,7 +64,7 @@ app.use((req, res, next) => {
 
 require("./config/passport.js");
 
-n
+
 mongoose.connect(process.env.DATABASE_LINK)
   .then(() => console.log("MongoDB Connected!"))
   .catch((err) => console.log("MongoDB Error:", err));
