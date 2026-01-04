@@ -1,0 +1,362 @@
+<% layout('layouts/boilerplate') -%>
+
+<style>
+  :root {
+    --victory-purple: #a855f7;
+    --victory-blue: #3b82f6;
+    --victory-pink: #ec4899;
+    --card-bg: rgba(20, 20, 20, 0.6);
+  }
+
+  .about-container {
+    max-width: 1200px;
+    margin: 60px auto;
+    padding: 0 20px;
+  }
+
+  /* Team Header Styling */
+  .team-header {
+    text-align: center;
+    margin-bottom: 80px;
+  }
+
+  .team-header h1 {
+    font-size: 3.5rem;
+    font-weight: 800;
+    background: linear-gradient(
+      to right,
+      var(--victory-purple),
+      var(--victory-pink)
+    );
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    margin-bottom: 15px;
+  }
+
+  /* Member Card Grid */
+  .member-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 30px;
+  }
+
+  .member-card {
+    background: var(--card-bg);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 24px;
+    padding: 40px 20px;
+    text-align: center;
+    backdrop-filter: blur(20px);
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    position: relative;
+    overflow: hidden;
+  }
+
+  /* Animated Border Effect */
+  .member-card::before {
+    content: "";
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: conic-gradient(
+      transparent,
+      transparent,
+      transparent,
+      var(--victory-purple)
+    );
+    animation: rotate 4s linear infinite;
+    opacity: 0;
+    transition: opacity 0.3s;
+  }
+
+  .member-card:hover::before {
+    opacity: 1;
+  }
+
+  .member-inner {
+    position: relative;
+    background: #0a0a0c;
+    border-radius: 22px;
+    height: 100%;
+    width: 100%;
+    padding: 20px;
+    z-index: 1;
+  }
+
+  .member-card:hover {
+    transform: translateY(-10px);
+    border-color: rgba(168, 85, 247, 0.4);
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.6);
+  }
+
+  /* Profile Elements */
+  .profile-icon {
+    width: 80px;
+    height: 80px;
+    background: rgba(255, 255, 255, 0.03);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 20px;
+    font-size: 2rem;
+    color: var(--victory-purple);
+    border: 1px solid rgba(168, 85, 247, 0.2);
+  }
+
+  .member-name {
+    color: #fff;
+    font-size: 1.4rem;
+    font-weight: 700;
+    margin-bottom: 5px;
+  }
+
+  .member-role {
+    color: var(--victory-blue);
+    font-size: 0.9rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    margin-bottom: 20px;
+  }
+
+  .github-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 20px;
+    background: rgba(255, 255, 255, 0.05);
+    color: #fff;
+    text-decoration: none;
+    border-radius: 50px;
+    font-weight: 600;
+    font-size: 0.85rem;
+    transition: 0.3s;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+  }
+
+  .github-link:hover {
+    background: #fff;
+    color: #000;
+    transform: scale(1.05);
+  }
+
+  .social-links {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    margin-top: 20px;
+  }
+
+  .social-btn {
+    width: 45px;
+    height: 45px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.2rem;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    color: #fff;
+    transition: all 0.3s ease;
+    text-decoration: none;
+  }
+
+  /* GitHub Hover */
+  .social-btn.github:hover {
+    background: #fff;
+    color: #000;
+    box-shadow: 0 0 15px rgba(255, 255, 255, 0.3);
+    transform: translateY(-3px);
+  }
+
+  /* LinkedIn Hover */
+  .social-btn.linkedin:hover {
+    background: #0077b5;
+    color: #fff;
+    border-color: #0077b5;
+    box-shadow: 0 0 15px rgba(0, 119, 181, 0.4);
+    transform: translateY(-3px);
+  }
+
+  .member-inner {
+    padding-bottom: 30px; /* Extra space for the social links */
+  }
+
+  @keyframes rotate {
+    100% {
+      transform: rotate(360deg);
+    }
+  }
+</style>
+
+<div class="about-container">
+  <canvas
+    id="glitterCanvas"
+    style="
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: -1;
+    "
+  ></canvas>
+  <div class="team-header">
+    <h6
+      class="text-secondary text-uppercase fw-bold mb-2"
+      style="letter-spacing: 5px"
+    >
+      Our Team
+    </h6>
+    <h1>Vector Victory</h1>
+    <p class="text-secondary lead mx-auto" style="max-width: 600px">
+      A specialized group of engineers and designers dedicated to
+      revolutionizing the B2B marketplace.
+    </p>
+  </div>
+
+  <div class="member-grid">
+    <div class="member-card">
+      <div class="member-inner">
+        <div class="profile-icon"><i class="fa-solid fa-crown"></i></div>
+        <div class="member-name">Vraj Prajapati</div>
+        <div class="member-role">Leader & Full Stack Developer</div>
+
+        <div class="social-links">
+          <a
+            href="https://github.com/VrajPrajapati6"
+            class="social-btn github"
+            title="GitHub"
+          >
+            <i class="fa-brands fa-github"></i>
+          </a>
+          <a
+            href="https://www.linkedin.com/in/vraj-prajapati-47694832a/"
+            class="social-btn linkedin"
+            title="LinkedIn"
+          >
+            <i class="fa-brands fa-linkedin-in"></i>
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <div class="member-card">
+      <div class="member-inner">
+        <div class="profile-icon"><i class="fa-solid fa-code"></i></div>
+        <div class="member-name">Prince Patel</div>
+        <div class="member-role">Full Stack Developer</div>
+
+        <div class="social-links">
+          <a href="https://github.com/princeptl-work" class="social-btn github">
+            <i class="fa-brands fa-github"></i>
+          </a>
+          <a
+            href="https://www.linkedin.com/in/prince-patel-work/"
+            class="social-btn linkedin"
+          >
+            <i class="fa-brands fa-linkedin-in"></i>
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <div class="member-card">
+      <div class="member-inner">
+        <div class="profile-icon"><i class="fa-solid fa-pen-nib"></i></div>
+        <div class="member-name">Jal Patel</div>
+        <div class="member-role">ML & Researcher</div>
+
+        <div class="social-links">
+          <a href="https://github.com/jalmitul12" class="social-btn github">
+            <i class="fa-brands fa-github"></i>
+          </a>
+          <a
+            href="https://www.linkedin.com/in/jal-patel-45b829313/"
+            class="social-btn linkedin"
+          >
+            <i class="fa-brands fa-linkedin-in"></i>
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <div class="member-card">
+      <div class="member-inner">
+        <div class="profile-icon"><i class="fa-solid fa-microchip"></i></div>
+        <div class="member-name">Divya Langalia</div>
+        <div class="member-role">UI/UX & Editor</div>
+
+        <div class="social-links">
+          <a href="https://github.com/Divya-tech06" class="social-btn github">
+            <i class="fa-brands fa-github"></i>
+          </a>
+          <a
+            href="https://www.linkedin.com/in/divya-langalia-b46a16305/"
+            class="social-btn linkedin"
+          >
+            <i class="fa-brands fa-linkedin-in"></i>
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  const canvas = document.getElementById("glitterCanvas");
+  const ctx = canvas.getContext("2d");
+
+  let particles = [];
+  const colors = ["#a855f7", "#ec4899", "#6366f1", "#3b82f6"];
+
+  function init() {
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+    particles = [];
+    for (let i = 0; i < 90; i++) {
+      particles.push({
+        x: Math.random() * canvas.width,
+        y: Math.random() * canvas.height,
+        size: Math.random() * 4 + 1,
+        dx: (Math.random() - 0.5) * 0.8,
+        dy: (Math.random() - 0.5) * 0.8,
+        color: colors[Math.floor(Math.random() * colors.length)],
+      });
+    }
+  }
+
+  function animate() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    particles.forEach((p) => {
+      // Draw 3D-like shaded sphere
+      let gradient = ctx.createRadialGradient(p.x, p.y, 0, p.x, p.y, p.size);
+      gradient.addColorStop(0, "white");
+      gradient.addColorStop(0.4, p.color);
+      gradient.addColorStop(1, "transparent");
+
+      ctx.fillStyle = gradient;
+      ctx.beginPath();
+      ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+      ctx.fill();
+
+      // Movement logic
+      p.x += p.dx;
+      p.y += p.dy;
+
+      // Bounce off edges
+      if (p.x < 0 || p.x > canvas.width) p.dx *= -1;
+      if (p.y < 0 || p.y > canvas.height) p.dy *= -1;
+    });
+    requestAnimationFrame(animate);
+  }
+
+  window.addEventListener("resize", init);
+  init();
+  animate();
+</script>

@@ -1,0 +1,584 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title><%= title %> | MarketMapper</title>
+    <link rel="icon" type="image/png" href="/logo.png" />
+
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+
+    <style>
+      body {
+        margin: 0;
+        padding: 0;
+        background-color: #050505;
+        color: #ffffff;
+        font-family: "Plus Jakarta Sans", sans-serif;
+      }
+
+      header {
+        background: transparent !important;
+        position: sticky;
+        top: 0;
+        width: 100%;
+        z-index: 9999;
+        display: flex;
+        justify-content: center;
+      }
+
+      .navbar-capsule {
+        background: rgba(20, 20, 22, 0.85);
+        backdrop-filter: blur(16px);
+        -webkit-backdrop-filter: blur(16px);
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        border-radius: 100px;
+        margin-top: 20px;
+        width: 92%;
+        padding: 8px 30px;
+        display: flex;
+        align-items: center;
+        box-shadow: 0px 5px 10px rgba(0, 0, 0, 0.5);
+        position: relative;
+        z-index: 10000;
+      }
+
+      .brand {
+        font-weight: 800;
+        font-size: 1.1rem;
+        color: #fff !important;
+        text-decoration: none !important;
+        letter-spacing: 2px;
+        text-transform: uppercase;
+      }
+
+      .nav-links-container {
+        display: flex;
+        list-style: none;
+        margin: 0 25px 0 auto;
+        padding: 0;
+        gap: 5px;
+      }
+
+      .nav-item-custom {
+        text-decoration: none !important;
+        color: #94a3b8;
+        font-weight: 700;
+        font-size: 1rem;
+        padding: 10px 20px;
+        border-radius: 50px;
+        transition: 0.3s;
+      }
+
+      .nav-item-custom:hover,
+      .nav-item-custom.active {
+        color: #fff !important;
+        background: rgba(168, 85, 247, 0.15);
+      }
+
+      .user-actions {
+        display: flex;
+        align-items: center;
+        gap: 25px;
+      }
+
+      .profile-img-wrapper {
+        width: 38px;
+        height: 38px;
+        border-radius: 50%;
+        cursor: pointer;
+        border: 2px solid rgba(255, 255, 255, 0.1);
+        overflow: hidden;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: 0.3s;
+        background: transparent;
+        padding: 0;
+      }
+
+      .profile-img-wrapper img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+      }
+
+      .dropdown-menu {
+        background-color: #0f0f11 !important;
+        border: 1px solid rgba(255, 255, 255, 0.1) !important;
+        border-radius: 16px !important;
+        padding: 8px !important;
+        margin-top: 15px !important;
+        box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+      }
+      .nav-pills .nav-link {
+        color: #94a3b8;
+        background: transparent;
+        transition: 0.3s;
+      }
+      .nav-pills .nav-link.active {
+        background: rgba(168, 85, 247, 0.2) !important;
+        color: #a855f7 !important;
+        border: 1px solid rgba(168, 85, 247, 0.3);
+      }
+      .hover-bg:hover {
+        background: rgba(255, 255, 255, 0.03);
+      }
+      .text-purple {
+        color: #a855f7 !important;
+      }
+      .btn-xs {
+        padding: 1px 5px;
+        font-size: 0.7rem;
+      }
+      /* Force visibility in the notification dropdown [cite: 20, 21] */
+      #pills-tabContent .hover-bg a {
+        color: #ffffff !important; /* Force pure white for names */
+        font-size: 0.9rem;
+        display: inline-block;
+        min-width: 100px;
+        z-index: 10001;
+      }
+      /* Force visibility for usernames in the notification list */
+      #pills-tabContent a {
+        color: #ffffff !important;
+        opacity: 1 !important;
+        visibility: visible !important;
+      }
+
+      /* Ensure the container doesn't collapse the text [cite: 49] */
+      .hover-bg {
+        background: rgba(255, 255, 255, 0.03);
+        transition: all 0.2s ease;
+      }
+
+      .hover-bg:hover {
+        background: rgba(168, 85, 247, 0.1) !important;
+      }
+      /* Sidebar Link Styles */
+      .sidebar-link {
+        color: #94a3b8;
+        text-decoration: none;
+        padding: 15px 25px;
+        display: flex;
+        align-items: center;
+        font-weight: 600;
+        border-radius: 12px;
+        margin: 4px 15px;
+        transition: all 0.3s ease;
+      }
+
+      .sidebar-link:hover {
+        background: rgba(168, 85, 247, 0.1);
+        color: #a855f7;
+        transform: translateX(8px);
+      }
+
+      .sidebar-link.active {
+        background: rgba(168, 85, 247, 0.2);
+        color: #a855f7;
+        border: 1px solid rgba(168, 85, 247, 0.3);
+      }
+
+      /* Adjust Sidebar to sit below the Navbar capsule */
+      .offcanvas {
+        background-color: #0f0f11 !important;
+        border-left: 1px solid rgba(255, 255, 255, 0.1) !important;
+        width: 320px !important;
+
+        /* Start below the header area */
+        top: 90px !important;
+        height: calc(100% - 90px) !important;
+
+        /* Ensure it sits above the main content but below the navbar if preferred */
+        z-index: 1045 !important;
+      }
+
+      /* Position the close button to be clearly visible */
+      .btn-close-white {
+        margin-top: 10px;
+        margin-right: 10px;
+      }
+
+      /* Ensure the backdrop doesn't cover the navbar so you can still click 'Home' */
+      .offcanvas-backdrop {
+        top: 90px !important;
+        z-index: 1040 !important;
+      }
+
+      /* Ensure navbar-capsule handles the layout correctly */
+      .user-actions {
+        gap: 20px !important;
+      }
+    </style>
+  </head>
+  <body>
+    <% if (link !== 'landing' && link !== 'login') { %>
+    <header>
+      <nav class="navbar-capsule">
+        <a href="/dashboard" class="brand"
+          ><img
+            src="/logo.png"
+            alt="MarketMapper Logo"
+            style="height: 32px; width: auto; margin-right: 10px"
+          />
+          MARKETMAPPER</a
+        >
+
+        <ul class="nav-links-container">
+          <li>
+            <a
+              href="/dashboard"
+              class="nav-item-custom <%= link === 'dashboard' ? 'active' : '' %>"
+              >Dashboard</a
+            >
+          </li>
+          <li>
+            <a
+              href="/analysis"
+              class="nav-item-custom <%= link === 'analysis' ? 'active' : '' %>"
+              >Analysis</a
+            >
+          </li>
+          <li>
+            <a
+              href="/businesses"
+              class="nav-item-custom <%= link === 'businesses' ? 'active' : '' %>"
+              >Businesses</a
+            >
+          </li>
+        </ul>
+
+        <button
+          class="btn text-secondary p-0 border-0 me-4"
+          type="button"
+          data-bs-toggle="offcanvas"
+          data-bs-target="#menuSidebar"
+        >
+          <i class="fa-solid fa-bars-staggered fs-5"></i>
+        </button>
+
+        <div class="user-actions">
+          <% if(currUser) { %>
+
+          <div class="dropdown">
+            <button
+              class="btn text-secondary p-0"
+              id="notifDropdown"
+              data-bs-toggle="dropdown"
+              aria-expanded="false"
+            >
+              <i class="fa-regular fa-bell"></i>
+              <% if(currUser.pendingRequests && currUser.pendingRequests.length
+              > 0) { %>
+              <span
+                class="position-absolute top-0 start-100 translate-middle p-1 bg-danger border border-light rounded-circle"
+              ></span>
+              <% } %>
+            </button>
+            <ul
+              class="dropdown-menu dropdown-menu-end p-0 overflow-hidden"
+              style="min-width: 320px; background: #0f0f11"
+            >
+              <div class="p-3 border-bottom border-secondary border-opacity-25">
+                <h6 class="text-white mb-3 small fw-bold uppercase">
+                  Network Requests
+                </h6>
+                <div
+                  class="nav nav-pills nav-fill bg-dark rounded-pill p-1"
+                  id="pills-tab"
+                  role="tablist"
+                >
+                  <button
+                    class="nav-link active small py-1 rounded-pill"
+                    id="received-tab"
+                    data-bs-toggle="pill"
+                    data-bs-target="#pills-received"
+                    type="button"
+                  >
+                    Received
+                  </button>
+                  <button
+                    class="nav-link small py-1 rounded-pill"
+                    id="sent-tab"
+                    data-bs-toggle="pill"
+                    data-bs-target="#pills-sent"
+                    type="button"
+                  >
+                    Sent
+                  </button>
+                </div>
+              </div>
+
+              <div
+                class="tab-content p-2"
+                style="max-height: 400px; overflow-y: auto"
+                id="pills-tabContent"
+              >
+                <div
+                  class="tab-pane fade show active"
+                  id="pills-received"
+                  role="tabpanel"
+                >
+                  <% if(currUser.pendingRequests &&
+                  currUser.pendingRequests.length > 0) { %> <%
+                  currUser.pendingRequests.forEach(requester => { %>
+                  <div
+                    class="d-flex align-items-center justify-content-between p-2 mb-1 rounded hover-bg"
+                  >
+                    <div class="d-flex align-items-center gap-2">
+                      <img
+                        src="<%= requester.image || 'https://ui-avatars.com/api/?name=' + requester.username %>"
+                        class="rounded-circle"
+                        style="width: 28px; height: 28px; object-fit: cover"
+                      />
+                      <a
+                        href="/profile/<%= requester._id %>"
+                        class="text-decoration-none text-white small fw-bold"
+                      >
+                        <%= requester.username %>
+                      </a>
+                    </div>
+                    <div class="d-flex gap-2">
+                      <form
+                        action="/connect/accept/<%= requester._id %>"
+                        method="POST"
+                      >
+                        <button
+                          class="btn btn-sm btn-success rounded-circle py-0 px-1"
+                        >
+                          <i class="fa-solid fa-check small"></i>
+                        </button>
+                      </form>
+                      <form
+                        action="/connect/decline/<%= requester._id %>"
+                        method="POST"
+                      >
+                        <button
+                          class="btn btn-sm btn-outline-danger rounded-circle py-0 px-1"
+                        >
+                          <i class="fa-solid fa-xmark small"></i>
+                        </button>
+                      </form>
+                    </div>
+                  </div>
+                  <% }) %> <% } else { %>
+                  <div class="text-center py-4 text-secondary small">
+                    No pending requests
+                  </div>
+                  <% } %>
+                </div>
+
+                <div class="tab-pane fade" id="pills-sent" role="tabpanel">
+                  <% if(currUser.sentRequests && currUser.sentRequests.length >
+                  0) { %> <% currUser.sentRequests.forEach(recipient => { %>
+                  <div
+                    class="d-flex align-items-center p-2 mb-1 rounded hover-bg"
+                  >
+                    <div class="d-flex align-items-center gap-2">
+                      <img
+                        src="<%= recipient.image || 'https://ui-avatars.com/api/?name=' + recipient.username %>"
+                        class="rounded-circle"
+                        style="width: 28px; height: 28px; object-fit: cover"
+                      />
+                      <a
+                        href="/profile/<%= recipient._id %>"
+                        class="text-decoration-none text-secondary small"
+                      >
+                        <%= recipient.username %>
+                      </a>
+                    </div>
+                    <span class="ms-auto badge bg-dark text-secondary fw-normal"
+                      >Pending</span
+                    >
+                  </div>
+                  <% }) %> <% } else { %>
+                  <div class="text-center py-4 text-secondary small">
+                    No sent requests
+                  </div>
+                  <% } %>
+                </div>
+              </div>
+
+              <div
+                class="p-2 border-top border-secondary border-opacity-10 text-center"
+              >
+                <a
+                  href="/connections"
+                  class="text-purple small text-decoration-none"
+                  >Manage All Connections</a
+                >
+              </div>
+            </ul>
+          </div>
+
+          <div class="dropdown">
+            <button
+              class="profile-img-wrapper"
+              id="profileDropdown"
+              data-bs-toggle="dropdown"
+              aria-expanded="false"
+            >
+              <img
+                src="<%= currUser.image || 'https://ui-avatars.com/api/?name=' + currUser.username + '&background=a855f7&color=fff' %>"
+                alt="Profile"
+              />
+            </button>
+
+            <ul class="dropdown-menu dropdown-menu-end">
+              <li>
+                <h6 class="dropdown-header text-white">
+                  <%= currUser.username %>
+                </h6>
+              </li>
+              <li>
+                <hr class="dropdown-divider border-secondary opacity-25" />
+              </li>
+              <li>
+                <a
+                  class="dropdown-item text-secondary"
+                  href="/profile/<%= currUser._id %>"
+                  ><i class="fa-regular fa-user me-2"></i> Profile</a
+                >
+              </li>
+              <li>
+                <a class="dropdown-item text-secondary" href="/about"
+                  ><i class="fa-regular fa-circle-question me-2"></i> About
+                  Us</a
+                >
+              </li>
+              <li>
+                <hr class="dropdown-divider border-secondary opacity-25" />
+              </li>
+              <li>
+                <a class="dropdown-item text-danger fw-bold" href="/logout"
+                  ><i class="fa-solid fa-power-off me-2"></i> Logout</a
+                >
+              </li>
+            </ul>
+          </div>
+
+          <% } else { %>
+          <a href="/login" class="nav-item-custom">Login</a>
+          <% } %>
+        </div>
+      </nav>
+    </header>
+    <div
+      class="offcanvas offcanvas-end"
+      tabindex="-1"
+      id="menuSidebar"
+      style="
+        background: #0f0f11;
+        border-left: 1px solid rgba(255, 255, 255, 0.1);
+      "
+    >
+      <div
+        class="offcanvas-header border-bottom border-secondary border-opacity-10 p-4"
+      >
+        <h5 class="offcanvas-title text-white fw-bold">MARKET MENU</h5>
+        <button
+          type="button"
+          class="btn-close btn-close-white"
+          data-bs-dismiss="offcanvas"
+        ></button>
+      </div>
+      <div class="offcanvas-body p-2">
+        <nav class="mt-3">
+          <a
+            href="/posts"
+            class="sidebar-link <%= link === 'posts' ? 'active' : '' %>"
+          >
+            <i class="fa-solid fa-users-viewfinder me-3"></i> Community
+          </a>
+          <a
+            href="/myPosts"
+            class="sidebar-link <%= link === 'myPosts' ? 'active' : '' %>"
+          >
+            <i class="fa-solid fa-file-pen me-3"></i> My Posts
+          </a>
+          <a
+            href="/contracts"
+            class="sidebar-link <%= link === 'contracts' ? 'active' : '' %>"
+          >
+            <i class="fa-solid fa-file-contract me-3"></i> Contracts
+          </a>
+          <a
+            href="/conversations"
+            class="sidebar-link <%= link === 'conversations' ? 'active' : '' %>"
+          >
+            <i class="fa-solid fa-message me-3"></i> Conversations
+          </a>
+          <a
+            href="/history"
+            class="sidebar-link <%= link === 'history' ? 'active' : '' %>"
+          >
+            <i class="fa-solid fa-clock-rotate-left me-3"></i> History
+          </a>
+        </nav>
+      </div>
+    </div>
+    <% } %>
+    <div
+      class="container mt-3"
+      style="max-width: 92%; position: relative; z-index: 10001"
+    >
+      <% if(success && success.length) { %>
+      <div
+        class="alert alert-success alert-dismissible fade show border-0 shadow-lg"
+        style="
+          background: rgba(25, 135, 84, 0.2);
+          backdrop-filter: blur(10px);
+          color: #75b798;
+        "
+        role="alert"
+      >
+        <i class="fa-solid fa-circle-check me-2"></i>
+        <%= success %>
+        <button
+          type="button"
+          class="btn-close btn-close-white"
+          data-bs-dismiss="alert"
+          aria-label="Close"
+        ></button>
+      </div>
+      <% } %> <% if(error && error.length) { %>
+      <div
+        class="alert alert-danger alert-dismissible fade show border-0 shadow-lg"
+        style="
+          background: rgba(220, 53, 69, 0.2);
+          backdrop-filter: blur(10px);
+          color: #ea868f;
+        "
+        role="alert"
+      >
+        <i class="fa-solid fa-triangle-exclamation me-2"></i>
+        <%= error %>
+        <button
+          type="button"
+          class="btn-close btn-close-white"
+          data-bs-dismiss="alert"
+          aria-label="Close"
+        ></button>
+      </div>
+      <% } %>
+    </div>
+
+    <main style="min-height: 80vh"><%- body -%></main>
+    <% if (typeof title !== 'undefined' && title !== 'Welcome' && title !==
+    'Login' && title !== 'Signup' && title !== 'Result') { %> <%-
+    include('../includes/footer') %> <% } %>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  </body>
+</html>

@@ -1,0 +1,265 @@
+<% layout('layouts/boilerplate') -%>
+
+<style>
+  /* 1. Base Theme & Background */
+  body {
+    background-color: #050505 !important;
+    background-image: radial-gradient(
+      circle at 50% -20%,
+      #1e1b4b 0%,
+      #050505 80%
+    ) !important;
+    min-height: 100vh;
+  }
+
+  /* 2. The Glass Container */
+  .glass-card {
+    background: rgba(17, 17, 18, 0.8);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 28px;
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.7);
+    padding: 40px;
+  }
+
+  /* 3. Typography */
+  .hero-text {
+    background: linear-gradient(to right, #fff, #94a3b8);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    font-weight: 800;
+  }
+
+  /* 4. Custom Inputs */
+  .form-label-custom {
+    color: #94a3b8;
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    margin-bottom: 10px;
+  }
+
+  .form-control-glass {
+    background: rgba(0, 0, 0, 0.3) !important;
+    border: 1px solid rgba(255, 255, 255, 0.1) !important;
+    color: #fff !important;
+    border-radius: 12px !important;
+    padding: 14px 18px !important;
+    transition: all 0.3s ease;
+  }
+
+  .form-control-glass:focus {
+    border-color: #a855f7 !important;
+    box-shadow: 0 0 0 4px rgba(168, 85, 247, 0.2) !important;
+    outline: none;
+  }
+
+  /* 5. The "Posting As" Capsule */
+  .biz-selector-wrapper {
+    background: rgba(168, 85, 247, 0.05);
+    border: 1px solid rgba(168, 85, 247, 0.2);
+    border-radius: 16px;
+    padding: 15px;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    transition: 0.3s;
+  }
+
+  .biz-selector-wrapper:hover {
+    border-color: #a855f7;
+    background: rgba(168, 85, 247, 0.08);
+  }
+
+  /* 6. Image Upload & Preview Styling */
+  .upload-zone {
+    border: 2px dashed rgba(168, 85, 247, 0.3);
+    border-radius: 16px;
+    padding: 30px;
+    text-align: center;
+    cursor: pointer;
+    transition: 0.3s;
+    background: rgba(0, 0, 0, 0.2);
+  }
+
+  .upload-zone:hover {
+    border-color: #a855f7;
+    background: rgba(168, 85, 247, 0.05);
+  }
+
+  #image-preview-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+    gap: 10px;
+    margin-top: 15px;
+  }
+
+  .preview-thumb {
+    width: 100%;
+    aspect-ratio: 1/1;
+    object-fit: cover;
+    border-radius: 8px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+  }
+
+  /* 7. Action Button */
+  .btn-publish {
+    background: #a855f7;
+    color: #fff;
+    border: none;
+    border-radius: 50px;
+    padding: 16px 32px;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    transition: 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  }
+
+  .btn-publish:hover {
+    background: #9333ea;
+    box-shadow: 0 0 25px rgba(168, 85, 247, 0.5);
+    transform: scale(1.02);
+    color: #fff;
+  }
+
+  /* Fix for Select dropdown icon color */
+  select.form-control-glass {
+    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='%2394a3b8'%3e%3cpath fill-rule='evenodd' d='M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z'/%3e%3c/svg%3e");
+    background-repeat: no-repeat;
+    background-position: right 1rem center;
+    background-size: 16px 12px;
+    appearance: none;
+  }
+</style>
+
+<div class="container py-5">
+  <div class="row justify-content-center">
+    <div class="col-lg-7">
+      <div class="glass-card mt-4">
+        <div class="text-center mb-5">
+          <h1 class="hero-text">Share Insight</h1>
+          <p style="color: #94a3b8">
+            Contribute to the network and grow your business reputation.
+          </p>
+        </div>
+
+        <form
+          action="/addPost"
+          method="POST"
+          enctype="multipart/form-data"
+          class="needs-validation"
+          novalidate
+        >
+          <div class="mb-4">
+            <label class="form-label-custom">Posting As</label>
+            <div class="biz-selector-wrapper">
+              <div style="background: #a855f7; padding: 10px; border-radius: 12px">
+                <i class="fa-solid fa-store text-white"></i>
+              </div>
+              <select
+                name="post[authorBusiness]"
+                class="form-control-glass w-100"
+                style="border: none !important; background: transparent !important;"
+                required
+              >
+                <% businesses.forEach(biz => { %>
+                <option value="<%= biz._id %>" style="background: #111; color: #fff">
+                  <%= biz.name %>
+                </option>
+                <% }) %>
+              </select>
+            </div>
+          </div>
+
+          <div class="mb-4">
+            <label class="form-label-custom">Title</label>
+            <input
+              type="text"
+              name="post[title]"
+              class="form-control-glass w-100"
+              placeholder="e.g., Warning: Logistic delays in West Zone"
+              required
+            />
+          </div>
+
+          <div class="mb-4">
+            <label class="form-label-custom">Category</label>
+            <select name="post[postType]" class="form-control-glass w-100">
+              <option value="INSIGHT">General Insight</option>
+              <option value="TIP">Professional Tip</option>
+              <option value="WARNING">Market Warning</option>
+              <option value="OPPORTUNITY">Opportunities</option>
+              <option value="CASE_STUDY">Case study</option>
+              <option value="QUESTION">Need help ?</option>
+              <option value="RESOURCE">Resource marketing</option>
+            </select>
+          </div>
+
+          <div class="mb-4">
+            <label class="form-label-custom">Attach Images</label>
+            <div class="upload-zone" onclick="document.getElementById('image-input').click()">
+              <i class="fa-solid fa-images mb-2" style="font-size: 1.5rem; color: #a855f7;"></i>
+              <p class="mb-0" style="color: #94a3b8; font-size: 0.85rem;">Click to browse multiple images</p>
+              <input 
+                type="file" 
+                name="post[images]" 
+                id="image-input" 
+                multiple 
+                accept="image/*" 
+                class="d-none"
+                onchange="handleImagePreview(event)"
+              />
+            </div>
+            <div id="image-preview-grid"></div>
+          </div>
+
+          <div class="mb-5">
+            <label class="form-label-custom">Content</label>
+            <textarea
+              name="post[content]"
+              class="form-control-glass w-100"
+              rows="5"
+              placeholder="Detail your experience..."
+              required
+            ></textarea>
+          </div>
+
+          <div class="d-flex align-items-center justify-content-between">
+            <a
+              href="/myPosts"
+              style="color: #94a3b8; text-decoration: none; font-weight: 600; transition: 0.3s;"
+              onmouseover="this.style.color='#fff'"
+              onmouseout="this.style.color='#94a3b8'"
+              >Cancel</a
+            >
+            <button type="submit" class="btn-publish px-5">Publish Now</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  function handleImagePreview(event) {
+    const grid = document.getElementById('image-preview-grid');
+    grid.innerHTML = ''; // Clear existing previews
+    
+    const files = event.target.files;
+    
+    if (files) {
+      Array.from(files).forEach(file => {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+          const img = document.createElement('img');
+          img.src = e.target.result;
+          img.classList.add('preview-thumb');
+          grid.appendChild(img);
+        }
+        reader.readAsDataURL(file);
+      });
+    }
+  }
+</script>

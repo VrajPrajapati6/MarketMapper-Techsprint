@@ -1,0 +1,44 @@
+<nav class="app-navbar">
+  <div
+    class="container-fluid px-4 d-flex justify-content-between align-items-center position-relative"
+  >
+    <a href="/dashboard" class="nav-brand">MarketMapper</a>
+
+    <div class="nav-links-group">
+      <a
+        href="/dashboard"
+        class="nav-link-custom <%= (typeof link !== 'undefined' && link === 'dashboard') ? 'active' : '' %>"
+        >Dashboard</a
+      >
+      <a
+        href="/analysis"
+        class="nav-link-custom <%= (typeof link !== 'undefined' && link === 'analysis') ? 'active' : '' %>"
+        >Analysis</a
+      >
+      <a
+        href="/history"
+        class="nav-link-custom <%= (typeof link !== 'undefined' && link === 'history') ? 'active' : '' %>"
+        >History</a
+      >
+    </div>
+
+    <div class="d-flex align-items-center gap-3">
+      <% if(currUser) { %>
+      <a href="/profile" class="profile-btn">
+        <img
+          src="<%= currUser.image || 'https://upload.wikimedia.org/wikipedia/commons/7/7c/Profile_avatar_placeholder_large.png' %>"
+          class="profile-img"
+        />
+        <%= currUser.username ? currUser.username.split(' ')[0] : 'User' %>
+      </a>
+      <a
+        href="/logout"
+        style="color: #ef4444; text-decoration: none; font-weight: 500"
+        >Logout</a
+      >
+      <% } else { %>
+      <a href="/login" class="nav-link-custom">Sign in</a>
+      <% } %>
+    </div>
+  </div>
+</nav>

@@ -1,0 +1,258 @@
+<% layout("/layouts/boilerPlate.ejs") -%>
+
+<link
+  rel="stylesheet"
+  href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+/>
+
+<div class="container py-5 mt-4">
+  <div class="row justify-content-center">
+    <div class="col-lg-10">
+      <div
+        class="card bg-glass border-secondary-subtle rounded-4 shadow-lg overflow-hidden"
+      >
+        <form
+          action="/businesses"
+          method="POST"
+          class="needs-validation"
+          novalidate
+        >
+          <div class="row g-0">
+            <div
+              class="col-md-6 p-4 p-lg-5"
+              style="max-height: 85vh; overflow-y: auto"
+            >
+              <h2 class="text-white fw-bold mb-4">Register Business</h2>
+
+              <div class="mb-3">
+                <label class="form-label text-secondary small fw-bold"
+                  >BUSINESS NAME</label
+                >
+                <input
+                  type="text"
+                  name="business[name]"
+                  class="form-control bg-dark text-white border-secondary"
+                  required
+                />
+              </div>
+
+              <div class="mb-3">
+                <label class="form-label text-secondary small fw-bold"
+                  >CATEGORY</label
+                >
+                <select
+                  name="business[category]"
+                  class="form-select bg-dark text-white border-secondary"
+                  required
+                >
+                  <option value="" disabled selected>Select Category</option>
+                  <option value="Retail">Retail</option>
+                  <option value="Food & Beverage">Food & Beverage</option>
+                  <option value="Services">Services</option>
+                  <option value="Manufacturing">Manufacturing</option>
+                </select>
+              </div>
+
+              <div class="mb-3">
+                <label class="form-label text-secondary small fw-bold"
+                  >DESCRIPTION</label
+                >
+                <textarea
+                  name="business[description]"
+                  class="form-control bg-dark text-white border-secondary"
+                  rows="2"
+                ></textarea>
+              </div>
+
+              <div class="row mb-3">
+                <div class="col-6">
+                  <label class="form-label text-secondary small fw-bold"
+                    >EMPLOYEES</label
+                  >
+                  <input
+                    type="number"
+                    name="business[stats][employeeCount]"
+                    class="form-control bg-dark text-white border-secondary"
+                  />
+                </div>
+                <div class="col-6">
+                  <label class="form-label text-secondary small fw-bold"
+                    >YEARS IN BUSINESS</label
+                  >
+                  <input
+                    type="number"
+                    name="business[stats][yearsInBusiness]"
+                    class="form-control bg-dark text-white border-secondary"
+                  />
+                </div>
+              </div>
+
+              <div class="mb-3">
+                <label class="form-label text-secondary small fw-bold"
+                  >REVENUE RANGE</label
+                >
+                <select
+                  name="business[stats][revenueRange]"
+                  class="form-select bg-dark text-white border-secondary"
+                >
+                  <option value="< 10L">< 10L</option>
+                  <option value="10L - 50L">10L - 50L</option>
+                  <option value="50L+">50L+</option>
+                </select>
+              </div>
+
+              <div class="row mb-3">
+                <div class="col-6">
+                  <label class="form-label text-secondary small fw-bold"
+                    >Product & Service</label
+                  >
+                  <input
+                    type="text"
+                    name="business[resources][pos]"
+                    class="form-control bg-dark text-white border-secondary"
+                    placeholder="e.g. Square"
+                  />
+                </div>
+                <div class="col-6">
+                  <label class="form-label text-secondary small fw-bold"
+                    >DELIVERY Options</label
+                  >
+                  <select
+                    name="business[resources][hasDelivery]"
+                    class="form-select bg-dark text-white border-secondary"
+                  >
+                    <option value="Yes">Yes</option>
+                    <option value="No">No</option>
+                  </select>
+                </div>
+              </div>
+
+              <div class="mm-location position-relative mb-3">
+                <label class="form-label text-secondary small fw-bold"
+                  >SEARCH LOCATION</label
+                >
+                <input
+                  type="text"
+                  id="location"
+                  name="business[location][address]"
+                  class="form-control bg-dark text-white border-secondary"
+                  placeholder="Start typing address..."
+                  autocomplete="off"
+                  required
+                />
+                <div
+                  id="suggestions"
+                  class="suggestions bg-dark border border-secondary rounded-3 mt-1 position-absolute w-100"
+                  style="z-index: 1050"
+                ></div>
+              </div>
+
+              <input type="hidden" name="business[location][lat]" id="lat" />
+              <input type="hidden" name="business[location][lng]" id="lng" />
+
+              <button
+                type="submit"
+                class="btn btn-purple-capsule w-100 py-3 mt-3 rounded-pill"
+              >
+                Create Business
+              </button>
+            </div>
+
+            <div class="col-md-6 bg-dark position-relative">
+              <div
+                id="map"
+                style="height: 100%; min-height: 400px; width: 100%"
+              ></div>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script>
+  window.addEventListener("load", () => {
+    let map = L.map("map").setView([23.0225, 72.5714], 13); // Default Ahmedabad
+    L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png").addTo(
+      map
+    );
+
+    let marker = null;
+    const searchInput = document.getElementById("location");
+    const suggestionsDiv = document.getElementById("suggestions");
+    const latInput = document.getElementById("lat");
+    const lngInput = document.getElementById("lng");
+    let debounceTimer;
+
+    function updateMap(lat, lon, address) {
+      latInput.value = lat;
+      lngInput.value = lon;
+      if (marker) map.removeLayer(marker);
+      marker = L.marker([lat, lon]).addTo(map);
+      map.setView([lat, lon], 16);
+    }
+
+    searchInput.addEventListener("input", () => {
+      const query = searchInput.value.trim();
+      clearTimeout(debounceTimer);
+      if (query.length < 2) {
+        suggestionsDiv.innerHTML = "";
+        return;
+      }
+
+      debounceTimer = setTimeout(() => {
+        fetch(`https://photon.komoot.io/api/?q=${encodeURIComponent(query)}`)
+          .then((res) => res.json())
+          .then((data) => {
+            suggestionsDiv.innerHTML = "";
+            data.features.slice(0, 5).forEach((place) => {
+              const div = document.createElement("div");
+              div.className =
+                "p-2 suggestion-item border-bottom border-secondary text-white";
+              div.style.cursor = "pointer";
+
+              const props = place.properties;
+              const name = [props.name, props.city, props.state, props.country]
+                .filter(Boolean)
+                .join(", ");
+
+              div.textContent = name;
+              div.addEventListener("click", () => {
+                searchInput.value = name;
+                suggestionsDiv.innerHTML = "";
+                const [lon, lat] = place.geometry.coordinates;
+                updateMap(lat, lon, name);
+              });
+              suggestionsDiv.appendChild(div);
+            });
+          });
+      }, 400);
+    });
+
+    document.addEventListener("click", (e) => {
+      if (!e.target.closest(".mm-location")) suggestionsDiv.innerHTML = "";
+    });
+  });
+</script>
+
+<style>
+  .bg-glass {
+    background: rgba(15, 15, 20, 0.95);
+    backdrop-filter: blur(10px);
+  }
+  .suggestion-item:hover {
+    background: rgba(168, 85, 247, 0.2);
+  }
+  .btn-purple-capsule {
+    background: #a855f7;
+    color: white;
+    border: none;
+    font-weight: 700;
+  }
+  .btn-purple-capsule:hover {
+    background: #9333ea;
+    box-shadow: 0 0 15px rgba(168, 85, 247, 0.5);
+  }
+</style>

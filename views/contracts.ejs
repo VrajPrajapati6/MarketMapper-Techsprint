@@ -1,0 +1,801 @@
+<% layout('layouts/boilerplate') -%>
+
+<style>
+  /* Midnight Obsidian Custom Styles */
+  .glass-panel {
+    background: rgba(10, 10, 12, 0.7);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    border-radius: 24px;
+    transition: transform 0.3s ease;
+  }
+
+  .glass-modal {
+    background: rgba(10, 10, 12, 0.98) !important;
+    backdrop-filter: blur(30px);
+    border: 1px solid rgba(168, 85, 247, 0.2) !important;
+    border-radius: 32px !important;
+  }
+
+  .policy-box {
+    background: rgba(0, 0, 0, 0.3);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 16px;
+    padding: 20px;
+    color: #94a3b8;
+    white-space: pre-line;
+    max-height: 350px;
+    overflow-y: auto;
+  }
+
+  .detail-label {
+    font-size: 0.65rem;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    color: #a855f7;
+    font-weight: 800;
+    margin-bottom: 5px;
+    display: block;
+  }
+
+  #contractTabs .nav-link {
+    color: #64748b;
+    font-weight: 600;
+    border: none;
+    background: none;
+  }
+  #contractTabs .nav-link.active {
+    background: rgba(168, 85, 247, 0.2) !important;
+    color: #a855f7 !important;
+    border: 1px solid rgba(168, 85, 247, 0.3);
+  }
+</style>
+
+<div class="container py-5 mt-5">
+  <h2 class="text-white fw-bold mb-5">Business Contracts</h2>
+
+  <ul
+    class="nav nav-pills mb-4 bg-dark rounded-pill p-1 w-fit"
+    id="contractTabs"
+  >
+    <li class="nav-item">
+      <button
+        class="nav-link active rounded-pill px-4"
+        data-bs-toggle="pill"
+        data-bs-target="#tab-received"
+      >
+        Received
+      </button>
+    </li>
+    <li class="nav-item">
+      <button
+        class="nav-link rounded-pill px-4"
+        data-bs-toggle="pill"
+        data-bs-target="#tab-sent"
+      >
+        Sent
+      </button>
+    </li>
+    <li class="nav-item">
+      <button
+        class="nav-link rounded-pill px-4"
+        data-bs-toggle="pill"
+        data-bs-target="#tab-active"
+      >
+        Current Working
+      </button>
+    </li>
+    <li class="nav-item">
+      <button
+        class="nav-link rounded-pill px-4"
+        data-bs-toggle="pill"
+        data-bs-target="#tab-completed"
+      >
+        Completed
+      </button>
+    </li>
+    <li class="nav-item">
+      <button
+        class="nav-link rounded-pill px-4"
+        data-bs-toggle="pill"
+        data-bs-target="#tab-disputed"
+      >
+        Disputed
+      </button>
+    </li>
+  </ul>
+
+  <div class="tab-content">
+    <div class="tab-pane fade show active" id="tab-received">
+      <div class="row g-4">
+        <% if(received && received.length > 0) { %> <% received.forEach((ag, i)
+        => { %>
+        <div class="col-md-6">
+          <div class="glass-panel p-4 position-relative overflow-hidden">
+            <div
+              class="position-absolute top-0 start-0 h-100 bg-warning"
+              style="width: 4px; opacity: 0.8"
+            ></div>
+
+            <div
+              class="d-flex justify-content-between align-items-start mb-2 ps-2"
+            >
+              <div>
+                <h5 class="text-white fw-bold mb-1"><%= ag.title %></h5>
+                <p class="text-secondary small mb-0">
+                  From:
+                  <span class="text-white"><%= ag.sender.username %></span> •
+                  Sent: <%= new Date(ag.createdAt).toLocaleDateString('en-GB')
+                  %>
+                </p>
+              </div>
+              <div class="text-end">
+                <span class="text-purple fw-bold fs-5"
+                  >₹<%= ag.amount.toLocaleString('en-IN') %></span
+                >
+              </div>
+            </div>
+
+            <div class="d-flex gap-2 mt-4 ps-2">
+              <button
+                class="btn btn-sm btn-outline-light rounded-pill px-3"
+                data-bs-toggle="modal"
+                data-bs-target="#modal-rec-<%= i %>"
+              >
+                <i class="fa-solid fa-circle-info me-1"></i> Details
+              </button>
+              <form action="/contracts/accept/<%= ag._id %>" method="POST">
+                <button class="btn btn-sm btn-success rounded-pill px-3">
+                  Accept & Start
+                </button>
+              </form>
+              <form action="/contracts/decline/<%= ag._id %>" method="POST">
+                <button class="btn btn-sm btn-outline-danger rounded-pill px-3">
+                  Decline
+                </button>
+              </form>
+            </div>
+          </div>
+        </div>
+
+        <div
+          class="modal fade"
+          id="modal-rec-<%= i %>"
+          tabindex="-1"
+          aria-hidden="true"
+        >
+          <div class="modal-dialog modal-dialog-centered modal-lg">
+            <div class="modal-content glass-modal p-4">
+              <div class="modal-header border-0">
+                <h4 class="modal-title text-white fw-bold">Contract Review</h4>
+                <button
+                  type="button"
+                  class="btn-close btn-close-white"
+                  data-bs-dismiss="modal"
+                ></button>
+              </div>
+              <div class="modal-body">
+                <div class="row g-4 mb-4">
+                  <div class="col-md-6">
+                    <label class="detail-label">Sender</label>
+                    <p class="text-white fs-5"><%= ag.sender.username %></p>
+                  </div>
+                  <div class="col-md-6 text-md-end">
+                    <label class="detail-label">Valuation</label>
+                    <p class="text-success fs-4 fw-bold">
+                      ₹<%= ag.amount.toLocaleString('en-IN') %>
+                    </p>
+                  </div>
+                </div>
+                <label class="detail-label">Detailed Policy & Scope</label>
+                <div class="policy-box"><%= ag.description %></div>
+              </div>
+              <div class="modal-footer border-0">
+                <button
+                  class="btn btn-outline-secondary rounded-pill px-4"
+                  data-bs-dismiss="modal"
+                >
+                  Close
+                </button>
+                <form action="/contracts/accept/<%= ag._id %>" method="POST">
+                  <button class="btn btn-success rounded-pill px-4">
+                    Accept Agreement
+                  </button>
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+        <% }) %> <% } else { %>
+        <div class="col-12 text-center py-5 opacity-50">
+          <p class="text-secondary">No received contracts.</p>
+        </div>
+        <% } %>
+      </div>
+    </div>
+
+    <div class="tab-pane fade" id="tab-sent">
+      <div class="row g-4">
+        <% if(sent && sent.length > 0) { %> <% sent.forEach((ag, i) => { %>
+        <div class="col-md-6">
+          <div class="glass-panel p-4 position-relative overflow-hidden">
+            <div
+              class="position-absolute top-0 start-0 h-100"
+              style="width: 4px; background: #a855f7; opacity: 0.8"
+            ></div>
+
+            <div
+              class="d-flex justify-content-between align-items-start mb-2 ps-2"
+            >
+              <div>
+                <h5 class="text-white fw-bold mb-1"><%= ag.title %></h5>
+                <p class="text-secondary small mb-0">
+                  To:
+                  <span class="text-white"><%= ag.receiver.username %></span> •
+                  Sent: <%= new Date(ag.createdAt).toLocaleDateString('en-GB')
+                  %>
+                </p>
+              </div>
+              <div class="text-end">
+                <span class="text-purple fw-bold fs-5"
+                  >₹<%= ag.amount.toLocaleString('en-IN') %></span
+                >
+              </div>
+            </div>
+
+            <div class="d-flex gap-2 mt-4 ps-2">
+              <button
+                class="btn btn-sm btn-outline-light rounded-pill px-3"
+                data-bs-toggle="modal"
+                data-bs-target="#modal-sent-<%= i %>"
+              >
+                <i class="fa-solid fa-circle-info me-1"></i> Details
+              </button>
+              <form action="/contracts/decline/<%= ag._id %>" method="POST">
+                <button class="btn btn-sm btn-outline-danger rounded-pill px-3">
+                  Cancel Proposal
+                </button>
+              </form>
+            </div>
+          </div>
+        </div>
+
+        <div
+          class="modal fade"
+          id="modal-sent-<%= i %>"
+          tabindex="-1"
+          aria-hidden="true"
+        >
+          <div class="modal-dialog modal-dialog-centered modal-lg">
+            <div class="modal-content glass-modal p-4">
+              <div class="modal-header border-0">
+                <h4 class="modal-title text-white fw-bold">
+                  Sent Proposal Details
+                </h4>
+                <button
+                  type="button"
+                  class="btn-close btn-close-white"
+                  data-bs-dismiss="modal"
+                ></button>
+              </div>
+              <div class="modal-body">
+                <div class="row g-4 mb-4">
+                  <div class="col-md-6">
+                    <label class="detail-label">Sent To</label>
+                    <p class="text-white fs-5"><%= ag.receiver.username %></p>
+                  </div>
+                  <div class="col-md-6 text-md-end">
+                    <label class="detail-label">Valuation</label>
+                    <p class="text-success fs-4 fw-bold">
+                      ₹<%= ag.amount.toLocaleString('en-IN') %>
+                    </p>
+                  </div>
+                </div>
+                <label class="detail-label">Terms Sent</label>
+                <div class="policy-box"><%= ag.description %></div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <% }) %> <% } else { %>
+        <div class="col-12 text-center py-5 opacity-50">
+          <p class="text-secondary">No sent proposals yet.</p>
+        </div>
+        <% } %>
+      </div>
+    </div>
+
+    <div class="tab-pane fade" id="tab-active">
+      <div class="row g-4">
+        <% if(active && active.length > 0) { %> <% active.forEach((ag, i) => {
+        %>
+        <div class="col-md-6">
+          <div
+            class="glass-panel p-4 border-start border-4 border-success position-relative"
+          >
+            <div
+              class="d-flex justify-content-between align-items-start mb-2 ps-2"
+            >
+              <div>
+                <h5 class="text-white fw-bold mb-1"><%= ag.title %></h5>
+                <p class="text-secondary small mb-0">
+                  Partner:
+                  <span class="text-white"
+                    ><%= ag.sender._id.equals(currUser._id) ?
+                    ag.receiver.username : ag. sender.username %></span
+                  >
+                  • Started: <%= new
+                  Date(ag.updatedAt).toLocaleDateString('en-GB') %>
+                </p>
+              </div>
+              <div class="text-end">
+                <span class="text-success fw-bold fs-5"
+                  >₹<%= ag.amount.toLocaleString('en-IN') %></span
+                >
+              </div>
+            </div>
+
+            <div class="d-flex gap-2 mt-4 ps-2">
+              <button
+                class="btn btn-sm btn-outline-light rounded-pill px-3"
+                data-bs-toggle="modal"
+                data-bs-target="#modal-active-<%= i %>"
+              >
+                <i class="fa-solid fa-circle-info me-1"></i> Details
+              </button>
+
+              <button
+                class="btn btn-sm btn-outline-info rounded-pill px-3"
+                onclick="generateContractPDF('<%= ag.title %>', '<%= ag.sender.username %>', '<%= ag.receiver.username %>', '<%= ag.amount %>',                                 '<%= new Date(ag.deadline).toLocaleDateString() %>', `<%= ag.description %>`)"
+              >
+                <i class="fa-solid fa-file-pdf me-1"></i> Download
+              </button>
+
+              <button
+                class="btn btn-sm btn-outline-warning rounded-pill px-3"
+                data-bs-toggle="modal"
+                data-bs-target="#disputeForm-<%= i %>"
+              >
+                <i class="fa-solid fa-gavel me-1"></i> Dispute
+              </button>
+
+              <form
+                action="/contracts/complete/<%= ag._id %>"
+                method="POST"
+                class="ms-auto"
+              >
+                <button class="btn btn-sm btn-success rounded-pill px-3">
+                  Mark Completed
+                </button>
+              </form>
+            </div>
+          </div>
+        </div>
+
+        <div
+          class="modal fade"
+          id="modal-active-<%= i %>"
+          tabindex="-1"
+          aria-hidden="true"
+        >
+          <div class="modal-dialog modal-dialog-centered modal-lg">
+            <div class="modal-content glass-modal p-4 p-md-5">
+              <div class="modal-header border-0 pb-0">
+                <h3 class="modal-title text-white fw-bold">
+                  Active Agreement Details
+                </h3>
+                <button
+                  type="button"
+                  class="btn-close btn-close-white"
+                  data-bs-dismiss="modal"
+                ></button>
+              </div>
+              <div class="modal-body">
+                <div class="row g-4 mb-4">
+                  <div class="col-md-6">
+                    <div
+                      class="info-card p-3 rounded-4 bg-white bg-opacity-5 border border-white border-opacity-10"
+                    >
+                      <label class="detail-label">Status</label>
+                      <p class="text-success fs-5 fw-bold mb-0">
+                        Execution Phase
+                      </p>
+                    </div>
+                  </div>
+                  <div class="col-md-6">
+                    <div
+                      class="info-card p-3 rounded-4 bg-white bg-opacity-5 border border-white border-opacity-10"
+                    >
+                      <label class="detail-label">Valuation</label>
+                      <p class="text-white fs-5 fw-bold mb-0">
+                        ₹<%= ag.amount.toLocaleString('en-IN') %>
+                      </p>
+                    </div>
+                  </div>
+                </div>
+                <label class="detail-label">Policy & Scope of Work</label>
+                <div class="policy-box mt-2"><%= ag.description %></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div
+          class="modal fade"
+          id="disputeForm-<%= i %>"
+          tabindex="-1"
+          aria-hidden="true"
+        >
+          <div class="modal-dialog modal-dialog-centered">
+            <div
+              class="modal-content glass-modal border-warning border-opacity-25 p-3"
+            >
+              <div class="modal-header border-0">
+                <h5 class="modal-title text-warning fw-bold">
+                  <i class="fa-solid fa-triangle-exclamation me-2"></i>Raise a
+                  Dispute
+                </h5>
+                <button
+                  type="button"
+                  class="btn-close btn-close-white"
+                  data-bs-dismiss="modal"
+                ></button>
+              </div>
+              <form
+                action="/contracts/dispute/<%= ag._id %>"
+                method="POST"
+                onsubmit="return confirmDisputeAction(event, '<%= ag.        title %>')"
+              >
+                <div class="modal-body">
+                  <div class="p-3 bg-white bg-opacity-5 rounded-4 mb-3">
+                    <label class="detail-label">Contract Subject</label>
+                    <p class="text-white mb-0 fw-bold"><%= ag.title %></p>
+                  </div>
+                  <label class="detail-label">Reason for Dispute</label>
+                  <textarea
+                    name="disputeReason"
+                    class="form-control bg-dark text-white border-secondary rounded-4 p-3"
+                    rows="4"
+                    placeholder="Briefly explain the issue..."
+                    required
+                  ></textarea>
+                  <p class="text-muted small mt-3">
+                    <i class="fa-solid fa-info-circle me-1"></i> Filing a
+                    dispute will freeze this contract and alert the other
+                    partner.
+                  </p>
+                </div>
+                <div class="modal-footer border-0">
+                  <button
+                    type="button"
+                    class="btn btn-outline-secondary rounded-pill px-4"
+                    data-bs-dismiss="modal"
+                  >
+                    Cancel
+                  </button>
+                  <button
+                    type="submit"
+                    class="btn btn-warning rounded-pill px-4 fw-bold text-dark"
+                  >
+                    Confirm Dispute
+                  </button>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+        <% }) %> <% } else { %>
+        <div class="col-12 text-center py-5 opacity-50">
+          <p class="text-secondary">No active working projects found.</p>
+        </div>
+        <% } %>
+      </div>
+    </div>
+
+    <script>
+      function confirmDisputeAction(event, title) {
+        const check = confirm(
+          `WARNING: Are you sure you want to dispute the contract: "${title}"?\n\nThis action cannot be undone by you alone and will freeze all progress.`
+        );
+        if (!check) {
+          event.preventDefault();
+          return false;
+        }
+        return true;
+      }
+    </script>
+
+    <div class="tab-pane fade" id="tab-completed">
+      <div class="row g-4">
+        <% if(completed && completed.length > 0) { %> <% completed.forEach((ag,
+        i) => { %>
+        <div class="col-md-6">
+          <div
+            class="glass-panel p-4 border border-white border-opacity-10 rounded-4 grayscale-on-hover transition-all"
+          >
+            <div class="d-flex justify-content-between align-items-start mb-2">
+              <div>
+                <h5 class="text-secondary fw-bold mb-1"><%= ag.title %></h5>
+                <p class="text-muted small mb-0">
+                  Partner: <%= ag.sender._id.equals(currUser._id) ?
+                  ag.receiver.username : ag.sender.username %> • Finished: <%=
+                  new Date(ag.updatedAt).toLocaleDateString('en-GB') %>
+                </p>
+              </div>
+              <div class="text-end">
+                <span class="text-white opacity-50 fw-bold fs-5"
+                  >₹<%= ag.amount.toLocaleString('en-IN') %></span
+                >
+              </div>
+            </div>
+            <div class="d-flex gap-2 mt-4">
+              <button
+                class="btn btn-sm btn-outline-secondary rounded-pill px-4"
+                data-bs-toggle="modal"
+                data-bs-target="#modal-comp-<%= i %>"
+              >
+                <i class="fa-solid fa-clock-history me-1"></i> Review History
+              </button>
+              <span
+                class="badge bg-success bg-opacity-10 text-success rounded-pill px-3 py-2 ms-auto"
+              >
+                <i class="fa-solid fa-check-double me-1"></i> Finalized
+              </span>
+            </div>
+          </div>
+        </div>
+
+        <div
+          class="modal fade"
+          id="modal-comp-<%= i %>"
+          tabindex="-1"
+          aria-hidden="true"
+        >
+          <div class="modal-dialog modal-dialog-centered modal-lg">
+            <div class="modal-content glass-modal p-4 p-md-5">
+              <div class="modal-header border-0 pb-0">
+                <h3 class="modal-title text-secondary fw-bold">
+                  Archived Agreement
+                </h3>
+                <button
+                  type="button"
+                  class="btn-close btn-close-white"
+                  data-bs-dismiss="modal"
+                ></button>
+              </div>
+              <div class="modal-body opacity-75">
+                <div class="row g-4 mb-5">
+                  <div class="col-md-6">
+                    <label class="detail-label">Final Valuation</label>
+                    <p class="text-white fs-4 fw-bold">
+                      ₹<%= ag.amount.toLocaleString('en-IN') %>
+                    </p>
+                  </div>
+                  <div class="col-md-6 text-md-end">
+                    <label class="detail-label">Completion Date</label>
+                    <p class="text-white fs-5">
+                      <%= new Date(ag.updatedAt).toLocaleDateString('en-GB', {
+                      day: 'numeric', month: 'long', year: 'numeric' }) %>
+                    </p>
+                  </div>
+                </div>
+                <label class="detail-label">Terms Executed</label>
+                <div class="policy-box"><%= ag.description %></div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <% }) %> <% } else { %>
+        <div class="col-12 text-center py-5 opacity-50">
+          <p class="text-secondary">No completed contracts found.</p>
+        </div>
+        <% } %>
+      </div>
+    </div>
+
+    <div class="tab-pane fade" id="tab-disputed">
+      <div class="row g-4">
+        <% if(disputed && disputed.length > 0) { %> <% disputed.forEach((ag, i)
+        => { %>
+        <div class="col-md-6">
+          <div
+            class="glass-panel p-4 border-start border-4 border-danger position-relative"
+          >
+            <div
+              class="d-flex justify-content-between align-items-start mb-2 ps-2"
+            >
+              <div>
+                <h5 class="text-white fw-bold mb-1"><%= ag.title %></h5>
+                <p class="text-danger small mb-0 fw-bold">
+                  <i class="fa-solid fa-triangle-exclamation me-1"></i> STATUS:
+                  DISPUTED
+                </p>
+              </div>
+              <div class="text-end">
+                <span class="text-danger fw-bold fs-5"
+                  >₹<%= ag.amount.toLocaleString('en-IN') %></span
+                >
+              </div>
+            </div>
+
+            <div class="d-flex gap-2 mt-4 ps-2">
+              <button
+                class="btn btn-sm btn-outline-danger rounded-pill px-4"
+                data-bs-toggle="modal"
+                data-bs-target="#modal-disp-<%= i %>"
+              >
+                <i class="fa-solid fa-gavel me-1"></i> View Dispute Case
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <div
+          class="modal fade"
+          id="modal-disp-<%= i %>"
+          tabindex="-1"
+          aria-hidden="true"
+        >
+          <div class="modal-dialog modal-dialog-centered modal-lg">
+            <div
+              class="modal-content glass-modal border-danger border-opacity-25 p-4 p-md-5"
+            >
+              <div class="modal-header border-0 pb-0">
+                <h3 class="modal-title text-danger fw-bold">
+                  Dispute Resolution Case
+                </h3>
+                <button
+                  type="button"
+                  class="btn-close btn-close-white"
+                  data-bs-dismiss="modal"
+                ></button>
+              </div>
+              <div class="modal-body">
+                <div
+                  class="alert bg-danger bg-opacity-10 border-danger border-opacity-25 text-danger rounded-4 mb-4"
+                >
+                  <div class="d-flex gap-3">
+                    <i class="fa-solid fa-shield-halved fs-4"></i>
+                    <div>
+                      <h6 class="fw-bold mb-1">Contract Frozen</h6>
+                      <p class="small mb-0">
+                        This agreement is locked. Progress and financial
+                        transactions are suspended until a resolution is
+                        reached.
+                      </p>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="row g-4 mb-4">
+                  <div class="col-md-6">
+                    <label class="detail-label">Partners Involved</label>
+                    <p class="text-white fs-5 fw-semibold">
+                      <%= ag.sender.username %> & <%= ag.receiver.username %>
+                    </p>
+                  </div>
+                  <div class="col-md-6 text-md-end">
+                    <label class="detail-label">Disputed At</label>
+                    <p class="text-white">
+                      <%= new Date(ag.updatedAt).toLocaleDateString('en-GB', {
+                      day: 'numeric', month: 'long', year: 'numeric' }) %>
+                    </p>
+                  </div>
+                </div>
+
+                <div class="mb-4">
+                  <label class="detail-label text-warning"
+                    >Official Reason for Dispute</label
+                  >
+                  <div
+                    class="policy-box border-danger border-opacity-25 text-white"
+                    style="background: rgba(220, 53, 69, 0 05)"
+                  >
+                    <%= ag.disputeReason %>
+                  </div>
+                </div>
+
+                <label class="detail-label">Original Agreement Scope</label>
+                <div class="policy-box opacity-50 small">
+                  <%= ag.description %>
+                </div>
+              </div>
+              <div class="modal-footer border-0 pt-4">
+                <button
+                  type="button"
+                  class="btn btn-outline-secondary rounded-pill px-4"
+                  data-bs-dismiss="modal"
+                >
+                  Close Review
+                </button>
+                <a
+                  href="/messages/<%= ag.sender._id.equals(currUser._id) ? ag.receiver._id : ag.sender._id %>"
+                  class="btn btn-danger rounded-pill px-4"
+                >
+                  <i class="fa-solid fa-message me-1"></i> Contact Partner
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+        <% }) %> <% } else { %>
+        <div class="col-12 text-center py-5 opacity-50">
+          <p class="text-secondary">No contracts currently in dispute.</p>
+        </div>
+        <% } %>
+      </div>
+    </div>
+
+    <div class="tab-pane fade" id="tab-sent"></div>
+    <div class="tab-pane fade" id="tab-active"></div>
+    <div class="tab-pane fade" id="tab-completed"></div>
+    <div class="tab-pane fade" id="tab-disputed"></div>
+  </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.25/jspdf.plugin.autotable.min.js"></script>
+
+<script>
+  async function generateContractPDF(
+    title,
+    sender,
+    receiver,
+    amount,
+    deadline,
+    description
+  ) {
+    const { jsPDF } = window.jspdf;
+    const doc = new jsPDF();
+
+    // 1. PDF Header & Branding
+    doc.setFontSize(22);
+    doc.setTextColor(168, 85, 247); // Your Purple Brand Color
+    doc.text("MARKETMAPPER", 105, 20, { align: "center" });
+
+    doc.setFontSize(16);
+    doc.setTextColor(0, 0, 0);
+    doc.text("Official Business Agreement", 105, 30, { align: "center" });
+    doc.line(20, 35, 190, 35); // Horizontal line
+
+    // 2. Agreement Summary Table
+    doc.autoTable({
+      startY: 45,
+      theme: "striped",
+      headStyles: { fillColor: [168, 85, 247] },
+      body: [
+        ["Project Title", title],
+        ["Contracting Party (Sender)", sender],
+        ["Target Party (Receiver)", receiver],
+        ["Total Valuation", `INR ${Number(amount).toLocaleString("en-IN")}`],
+        ["Execution Deadline", deadline],
+        ["Contract Status", "ACTIVE"],
+      ],
+    });
+
+    // 3. Legal Terms & Scope
+    const finalY = doc.lastAutoTable.finalY + 15;
+    doc.setFontSize(14);
+    doc.text("Scope of Work & Legal Terms:", 20, finalY);
+
+    doc.setFontSize(10);
+    doc.setTextColor(80, 80, 80);
+    // Split text to fit page width
+    const splitDescription = doc.splitTextToSize(description, 170);
+    doc.text(splitDescription, 20, finalY + 10);
+
+    // 4. Footer
+    doc.setFontSize(8);
+    doc.setTextColor(150, 150, 150);
+    doc.text(
+      `Generated on ${new Date().toLocaleString()} via MarketMapper Contracts Hub`,
+      105,
+      285,
+      { align: "center" }
+    );
+
+    // Save the PDF
+    doc.save(`${title.replace(/\s+/g, "_")}_Agreement.pdf`);
+  }
+</script>

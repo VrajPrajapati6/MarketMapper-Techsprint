@@ -1,0 +1,383 @@
+<% layout('layouts/boilerplate') -%>
+
+<style>
+  /* 1. Base Theme & Background */
+  body {
+    background-color: #050505 !important;
+    background-image: radial-gradient(
+      circle at 50% -20%,
+      #1e1b4b 0%,
+      #050505 80%
+    ) !important;
+    min-height: 100vh;
+    color: #e5e7eb;
+  }
+
+  /* 2. The Glass Container */
+  .glass-card {
+    background: rgba(17, 17, 18, 0.8);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 28px;
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.7);
+    padding: 40px;
+  }
+
+  /* 3. Typography */
+  .hero-text {
+    background: linear-gradient(to right, #fff, #94a3b8);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    font-weight: 800;
+  }
+
+  /* 4. Action Button */
+  .btn-purple-capsule {
+    background: #a855f7;
+    color: #fff;
+    border: none;
+    transition: 0.4s;
+  }
+
+  .btn-purple-capsule:hover {
+    background: #9333ea;
+    box-shadow: 0 0 20px rgba(168, 85, 247, 0.4);
+    color: #fff;
+  }
+
+  /* 7. Posts Styling */
+  .post-card {
+    background: rgba(17, 17, 18, 0.85);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 22px;
+    padding: 22px;
+    margin-bottom: 30px;
+    backdrop-filter: blur(18px);
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.6);
+  }
+
+  .post-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 10px;
+  }
+
+  .post-title {
+    margin: 0;
+    font-size: 20px;
+    font-weight: 700;
+    color: #fff;
+  }
+
+  .post-type {
+    display: inline-block;
+    margin-top: 6px;
+    font-size: 11px;
+    font-weight: 700;
+    color: #a855f7;
+    background: rgba(168, 85, 247, 0.12);
+    padding: 4px 10px;
+    border-radius: 999px;
+  }
+
+  .post-content {
+    margin: 16px 0;
+    line-height: 1.7;
+    color: #d1d5db;
+  }
+
+  /* VOTE CONTROLS STYLING */
+  .vote-container {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    background: rgba(255, 255, 255, 0.05);
+    padding: 6px 14px;
+    border-radius: 50px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    width: fit-content;
+  }
+
+  .vote-btn {
+    background: none;
+    border: none;
+    color: #94a3b8;
+    font-size: 1.1rem;
+    cursor: pointer;
+    transition: 0.3s;
+    padding: 0 5px;
+  }
+
+  .vote-btn:hover {
+    color: #fff;
+  }
+  .vote-btn.up-active {
+    color: #22c55e;
+    filter: drop-shadow(0 0 8px rgba(34, 197, 94, 0.6));
+  }
+  .vote-btn.down-active {
+    color: #ef4444;
+    filter: drop-shadow(0 0 8px rgba(239, 68, 68, 0.6));
+  }
+
+  .vote-score {
+    color: #fff;
+    font-weight: 800;
+    font-family: monospace;
+    font-size: 1rem;
+    min-width: 20px;
+    text-align: center;
+  }
+
+  .comment-stat {
+    color: #94a3b8;
+    font-size: 0.9rem;
+    margin-left: 10px;
+  }
+
+  /* 8. Compact Image Gallery Strip */
+  .image-gallery-wrapper {
+    margin: 15px 0;
+    position: relative;
+  }
+
+  .image-scroll-container {
+    display: flex;
+    gap: 12px;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    padding-bottom: 10px;
+    scrollbar-width: none; /* Hides scrollbar on Firefox */
+  }
+
+  .image-scroll-container::-webkit-scrollbar {
+    display: none; /* Hides scrollbar on Chrome/Safari */
+  }
+
+  .gallery-item {
+    flex: 0 0 280px; /* Adjust this width to make boxes smaller or bigger */
+    height: 180px; /* Fixed compact height */
+    scroll-snap-align: start;
+    border-radius: 14px;
+    overflow: hidden;
+    background: #111;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+  }
+
+  .gallery-item img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover; /* Images fill the small box perfectly */
+    transition: transform 0.3s ease;
+  }
+
+  .gallery-item:hover img {
+    transform: scale(1.05);
+  }
+
+  /* Optional: Add a "Slide to view" hint if more than one image exists */
+  .scroll-hint {
+    font-size: 11px;
+    color: #a855f7;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-top: 5px;
+    display: block;
+    text-align: right;
+  }
+</style>
+
+<div class="container py-5 mt-4">
+  <canvas
+    id="glitterCanvas"
+    style="
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: -1;
+    "
+  ></canvas>
+  <div class="d-flex justify-content-between align-items-center mb-5">
+    <h1 class="fw-bold text-white">Community Posts</h1>
+    <a href="/addPost" class="btn btn-purple-capsule px-4 rounded-pill">
+      <i class="fa-solid fa-pen-to-square me-2"></i>New Post
+    </a>
+  </div>
+
+  <div class="row g-4">
+    <% if(posts.length > 0) { %> <% posts.forEach((post, index) => { %>
+    <div class="col-12">
+      <div class="post-card">
+        <div class="post-header">
+          <div>
+            <a
+              href="/profile/<%= post.authorUser._id %>"
+              class="text-decoration-none"
+            >
+              <span class="post-type"><%= post.postType %></span>
+              <div class="mt-2">
+                <small class="text-secondary d-block"
+                  ><%= post.authorBusiness.name %></small
+                >
+                <small class="text-secondary"
+                  >@<%= post.authorUser.username %></small
+                >
+              </div>
+            </a>
+          </div>
+        </div>
+
+        <h4 class="post-title"><%= post.title %></h4>
+        <p class="post-content"><%= post.content %></p>
+
+        <% if(post.images && post.images.length > 0) { %>
+        <div class="image-gallery-wrapper">
+          <div class="image-scroll-container">
+            <% post.images.forEach((img) => { %>
+            <div class="gallery-item">
+              <img src="<%= img %>" alt="Post content" loading="lazy" />
+            </div>
+            <% }) %>
+          </div>
+          <% if(post.images.length > 1) { %>
+          <span class="scroll-hint">Swipe to see more →</span>
+          <% } %>
+        </div>
+        <% } %>
+
+        <div class="d-flex align-items-center justify-content-between mt-4">
+          <div class="d-flex align-items-center">
+            <div class="vote-container" data-post-id="<%= post._id %>">
+              <button
+                class="vote-btn up-trigger"
+                onclick="handleVote(this, 'up')"
+              >
+                <i class="fa-solid fa-circle-chevron-up"></i>
+              </button>
+              <span class="vote-score"
+                ><%= post.upvotes - post.downvotes %></span
+              >
+              <button
+                class="vote-btn down-trigger"
+                onclick="handleVote(this, 'down')"
+              >
+                <i class="fa-solid fa-circle-chevron-down"></i>
+              </button>
+            </div>
+          </div>
+
+          <div class="d-flex gap-3">
+            <form
+              action="/posts/<%= post._id %>?_method=DELETE"
+              method="POST"
+              style="display: inline"
+            >
+              <button
+                class="btn btn-link text-danger p-0 small text-decoration-none fw-bold"
+              >
+                <i class="fa-solid fa-trash-can"></i> Delete
+              </button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+    <% }) %> <% } else { %>
+    <div class="text-center py-5 text-secondary">
+      <p>No community posts found.</p>
+    </div>
+    <% } %>
+  </div>
+</div>
+
+<script>
+  async function handleVote(button, type) {
+    const container = button.closest(".vote-container");
+    const postId = container.dataset.postId;
+    const scoreElement = container.querySelector(".vote-score");
+    const upBtn = container.querySelector(".up-trigger");
+    const downBtn = container.querySelector(".down-trigger");
+
+    let action = "";
+    if (type === "up") {
+      action = upBtn.classList.contains("up-active") ? "removeUp" : "addUp";
+    } else {
+      action = downBtn.classList.contains("down-active")
+        ? "removeDown"
+        : "addDown";
+    }
+
+    try {
+      const response = await fetch(`/posts/${postId}/vote`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ action: action }),
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        scoreElement.innerText = data.newScore;
+        if (type === "up") {
+          upBtn.classList.toggle("up-active");
+          downBtn.classList.remove("down-active");
+        } else {
+          downBtn.classList.toggle("down-active");
+          upBtn.classList.remove("up-active");
+        }
+      }
+    } catch (err) {
+      console.error("Voting system error:", err);
+    }
+  }
+</script>
+
+<script>
+  const canvas = document.getElementById("glitterCanvas");
+  const ctx = canvas.getContext("2d");
+  let particles = [];
+  const colors = ["#a855f7", "#ec4899", "#6366f1", "#3b82f6"];
+
+  function init() {
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+    particles = [];
+    for (let i = 0; i < 90; i++) {
+      particles.push({
+        x: Math.random() * canvas.width,
+        y: Math.random() * canvas.height,
+        size: Math.random() * 4 + 1,
+        dx: (Math.random() - 0.5) * 0.8,
+        dy: (Math.random() - 0.5) * 0.8,
+        color: colors[Math.floor(Math.random() * colors.length)],
+      });
+    }
+  }
+
+  function animate() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    particles.forEach((p) => {
+      let gradient = ctx.createRadialGradient(p.x, p.y, 0, p.x, p.y, p.size);
+      gradient.addColorStop(0, "white");
+      gradient.addColorStop(0.4, p.color);
+      gradient.addColorStop(1, "transparent");
+      ctx.fillStyle = gradient;
+      ctx.beginPath();
+      ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+      ctx.fill();
+      p.x += p.dx;
+      p.y += p.dy;
+      if (p.x < 0 || p.x > canvas.width) p.dx *= -1;
+      if (p.y < 0 || p.y > canvas.height) p.dy *= -1;
+    });
+    requestAnimationFrame(animate);
+  }
+  window.addEventListener("resize", init);
+  init();
+  animate();
+</script>

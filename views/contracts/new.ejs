@@ -1,0 +1,203 @@
+<% layout('layouts/boilerplate') -%>
+
+<style>
+  .agreement-container {
+    padding: 120px 0 60px;
+    background: radial-gradient(
+      circle at top right,
+      rgba(168, 85, 247, 0.1),
+      transparent 60%
+    );
+  }
+
+  .form-glass {
+    background: rgba(15, 15, 16, 0.7);
+    backdrop-filter: blur(25px);
+    -webkit-backdrop-filter: blur(25px);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    border-radius: 32px;
+    padding: 50px;
+    box-shadow: 0 40px 100px rgba(0, 0, 0, 0.6);
+  }
+
+  /* Modern Input Styling */
+  .custom-input {
+    background: rgba(255, 255, 255, 0.03) !important;
+    border: 1px solid rgba(255, 255, 255, 0.1) !important;
+    border-radius: 16px !important;
+    color: #fff !important;
+    padding: 14px 20px !important;
+    transition: all 0.3s ease;
+  }
+
+  .custom-input:focus {
+    border-color: #a855f7 !important;
+    box-shadow: 0 0 15px rgba(168, 85, 247, 0.2) !important;
+    background: rgba(255, 255, 255, 0.05) !important;
+  }
+
+  .field-label {
+    font-size: 0.75rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 1.2px;
+    color: #a855f7;
+    margin-bottom: 10px;
+    display: block;
+  }
+
+  .info-subtext {
+    font-size: 0.75rem;
+    color: #64748b;
+    margin-top: 6px;
+  }
+
+  /* Visual Divider */
+  .section-divider {
+    height: 1px;
+    background: linear-gradient(
+      90deg,
+      transparent,
+      rgba(255, 255, 255, 0.1),
+      transparent
+    );
+    margin: 40px 0;
+  }
+
+  .btn-submit-contract {
+    background: #a855f7;
+    color: #fff;
+    border: none;
+    border-radius: 50px;
+    padding: 16px 40px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    transition: 0.3s;
+  }
+
+  .btn-submit-contract:hover {
+    background: #9333ea;
+    box-shadow: 0 10px 30px rgba(168, 85, 247, 0.4);
+    transform: translateY(-3px);
+  }
+</style>
+
+<div class="agreement-container">
+  <div class="container">
+    <div class="row justify-content-center">
+      <div class="col-xl-9">
+        <div class="form-glass">
+          <div class="d-flex align-items-center mb-2">
+            <div class="p-3 rounded-4 bg-purple-dim me-3">
+              <i class="fa-solid fa-file-contract text-purple fs-4"></i>
+            </div>
+            <div>
+              <h2 class="text-white fw-bold mb-0">Draft New Agreement</h2>
+              <p class="text-secondary small mb-0">
+                Establish formal terms for your B2B collaboration
+              </p>
+            </div>
+          </div>
+
+          <div class="section-divider"></div>
+
+          <form action="/contracts/<%= receiver._id %>" method="POST">
+            <div class="row g-4">
+              <div class="col-md-6">
+                <label class="field-label">Originating Partner</label>
+                <div class="position-relative">
+                  <input
+                    type="text"
+                    class="custom-input w-100 opacity-50"
+                    value="<%= currUser.username %>"
+                    readonly
+                  />
+                  <i
+                    class="fa-solid fa-circle-check text-success position-absolute end-0 top-50 translate-middle-y me-3"
+                  ></i>
+                </div>
+                <p class="info-subtext">Verified Sender Identity</p>
+              </div>
+
+              <div class="col-md-6">
+                <label class="field-label">Target Partner</label>
+                <input
+                  type="text"
+                  name="receiver_name"
+                  class="custom-input w-100"
+                  value="<%= receiver.username %>"
+                  required
+                />
+                <p class="info-subtext">
+                  You may finalize the legal name of the recipient
+                </p>
+              </div>
+
+              <div class="col-12">
+                <label class="field-label">Agreement Title</label>
+                <input
+                  type="text"
+                  name="agreement[title]"
+                  class="custom-input w-100"
+                  placeholder="e.g. Strategic Supply Chain Alliance 2026"
+                  required
+                />
+              </div>
+
+              <div class="col-md-6">
+                <label class="field-label"
+                  >Contract Valuation - (₹-Indian Rupees)</label
+                >
+                <div class="input-group">
+                  <input
+                    type="number"
+                    name="agreement[amount]"
+                    class="custom-input w-100 border-start-0 rounded-start-0"
+                    placeholder="0.00"
+                    required
+                  />
+                </div>
+              </div>
+
+              <div class="col-md-6">
+                <label class="field-label">Execution Deadline</label>
+                <input
+                  type="date"
+                  name="agreement[deadline]"
+                  class="custom-input w-100"
+                  required
+                />
+              </div>
+
+              <div class="col-12">
+                <label class="field-label">Scope of Work & Legal Terms</label>
+                <textarea
+                  name="agreement[description]"
+                  class="custom-input w-100"
+                  rows="8"
+                  placeholder="Clearly outline deliverables, milestones, and payment trigger points..."
+                  required
+                ></textarea>
+              </div>
+
+              <div class="col-12 mt-5">
+                <div class="d-flex align-items-center justify-content-between">
+                  <a
+                    href="/chat/<%= receiver._id %>"
+                    class="btn btn-link text-secondary text-decoration-none fw-bold small"
+                  >
+                    <i class="fa-solid fa-arrow-left me-2"></i> Abandon Draft
+                  </a>
+                  <button type="submit" class="btn btn-submit-contract">
+                    Deploy Agreement
+                    <i class="fa-solid fa-paper-plane ms-2"></i>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
