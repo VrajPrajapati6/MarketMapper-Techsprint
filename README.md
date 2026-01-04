@@ -4,7 +4,7 @@
 
 MarketMapper AI is an **AI-powered business feasibility & location intelligence platform** that helps entrepreneurs, startups, and decision-makers evaluate whether a business idea will succeed at a **specific location** — using **real-time Google Maps data** and **Gemini AI reasoning**.
 
-This platform transforms **raw location data into clear Go / No-Go decisions**, reducing business failure caused by guesswork and outdated surveys.
+The platform transforms **raw location data into clear Go / No-Go decisions**, reducing business failure caused by guesswork and outdated surveys.
 
 ---
 
@@ -17,7 +17,7 @@ Starting a new business often relies on assumptions rather than evidence, leadin
 - ❌ Market gap detection  
 - ❌ Clear feasibility decisions  
 
-Traditional market research is **slow, expensive, and outdated**.
+Traditional market research is **slow, expensive, and outdated**, and there is **no unified system** to convert insights into confident actions.
 
 ---
 
@@ -26,6 +26,8 @@ Traditional market research is **slow, expensive, and outdated**.
 MarketMapper AI leverages **Google’s ecosystem and Gemini AI** to deliver **data-backed business decisions**.
 
 It analyzes **competition density, footfall trends, activity patterns, and demand gaps** to predict whether a business idea will succeed at a specific location.
+
+> **Not just data, but decisions.**
 
 ---
 
@@ -42,157 +44,147 @@ It analyzes **competition density, footfall trends, activity patterns, and deman
 ## 🔄 System Flow (4-Step Process)
 
 ### 1️⃣ Smart Input (Data Injection)
-
-- User selects:
-  - 📍 Location on the map  
-  - 🏪 Business category (e.g., Café, Gym, Pharmacy)
-
-- **Google Maps JavaScript API**
-  - Captures geographic & spatial context
-
-- **Google Places API**
-  - Discovers nearby competitors  
-  - Identifies business categories & density  
-  - Collects ratings, reviews & price levels  
+- User selects a **location** and **business category**
+- Google Maps JS API captures spatial context
+- Google Places API fetches nearby competitors, ratings & density
 
 ---
 
-### 2️⃣ The Intelligence (AI Core)
-
+### 2️⃣ AI Intelligence Engine
 Powered by **Gemini AI**, the system:
-
-- Analyzes **competition intensity**
-- Studies **real-world footfall patterns**
-- Evaluates **peak hours & activity trends**
-- Detects **underserved market gaps**
-- Calculates **business risk & success probability**
-
----
-
-### 3️⃣ Killer Features – Seeing What Others Miss
-
-#### 🔍 Gap Finder
-- Identifies **high-demand, low-competition** zones  
-- Highlights **missing business categories**
-
-#### 🚨 Cannibalization Alert
-- Detects **overcrowded markets**
-- Warns users before **high-risk investments**
-
-#### 🗺️ AI Heatmap Visualization
-- Location-wise success probability:
-  - 🔴 **Red** → High potential  
-  - 🔵 **Blue** → Low potential  
+- Analyzes competition intensity
+- Studies real-world footfall patterns
+- Evaluates peak hours & activity trends
+- Detects underserved demand gaps
+- Calculates feasibility & risk score
 
 ---
 
-### 4️⃣ The Verdict (Actionable Output)
-
-- 📊 **Feasibility Score**
-- 🗺️ **AI-powered success heatmap**
-- ⏰ **Optimal operating hours**
-- ✅ **Go / ❌ No-Go decision guidance**
-- 📄 **Complete business feasibility report**
+### 3️⃣ Advanced Market Insights
+- 🔍 **Gap Finder** – High-demand, low-competition zones  
+- 🚨 **Cannibalization Alert** – Warns against saturated markets  
+- 🗺️ **AI Heatmaps** – Visual success probability by area  
 
 ---
 
-## 📸 Screenshots
-
-### 🌐 Landing Page – MarketMapper AI
-*AI-powered platform introduction with core value proposition*
-<img width="1900" alt="MarketMapper Landing Page" src="https://github.com/user-attachments/assets/ac279a15-0d61-4a5e-9b62-5ae6d8f1e8c2" />
-
----
-
-### 📊 User Dashboard
-*Personalized dashboard showing reports, top regions, and analysis history*
-<img width="1900" alt="MarketMapper Dashboard" src="https://github.com/user-attachments/assets/57c0e177-0f9f-4db9-ac71-11f3085d3e34" />
+### 4️⃣ Actionable Verdict
+- 📊 Feasibility score
+- 🗺️ AI-powered heatmap
+- ⏰ Optimal operating hours
+- ✅ Go / ❌ No-Go recommendation
+- 📄 Detailed market intelligence report
 
 ---
 
-### 🧠 AI Market Analysis Report
-*Neural intelligence report with market potential score, competitor density, and Gemini insights*
-<img width="1900" alt="AI Market Analysis Report" src="https://github.com/user-attachments/assets/344f32b3-496d-403d-8159-4f8bf1c61869" />
+## ✨ Key Features
+
+- 🧠 AI Market Analysis (Demand, Competition, SWOT)
+- 📍 Location Opportunity Mapping
+- 🗺️ Heatmap-based Visualization
+- 🚨 Risk & Cannibalization Alerts
+- 📄 Feasibility Report Generator
+- 🤝 Verified B2B Partner Discovery
+- 📜 Secure Digital Contracts
+- ⭐ Reputation & Trust Scoring
+- 💬 In-app Business Communication
+- 🌐 Community Insights & Fraud Alerts
 
 ---
 
-### 🗺️ Opportunities, Threats & Expansion Strategy
-*AI-generated opportunities, risk analysis, and city expansion recommendations*
-<img width="1900" alt="Market Opportunities and Threats" src="https://github.com/user-attachments/assets/2cff5d64-4ef3-442a-8b4c-337cc4fae589" />
+## 📸 Key Screenshots 
+
+### 1️⃣ AI Market Intelligence Report  
+*AI-powered feasibility score, competition density & market potential analysis*
+<img width="1919" height="899" alt="6" src="https://github.com/user-attachments/assets/bdd35770-e2ce-4049-aa51-cf0285f98c89" />
+
+
+---
+
+### 2️⃣ SWOT Analysis & Expansion Strategy  
+*Strengths, weaknesses, opportunities, threats, and AI-recommended expansion zones*
+<img width="1919" height="892" alt="7" src="https://github.com/user-attachments/assets/e3195269-8dc3-4c6d-afbe-346a5c408c43" />
+
+---
+
+### 3️⃣ Reputation & Active Deals Dashboard  
+*Trust score, verified collaborations, and ongoing business deals*
+<img width="1919" height="918" alt="1" src="https://github.com/user-attachments/assets/e589feae-f6c2-4d12-ae32-17406bd94d7c" />
+
+
+---
+
+### 4️⃣ Secure Digital Contract Management  
+*End-to-end verified business agreement with secure deal execution*
+<img width="1919" height="687" alt="10" src="https://github.com/user-attachments/assets/ca82aa7c-dbab-4ec5-9259-f18b3337eab5" />
+
+<img width="1747" height="538" alt="11" src="https://github.com/user-attachments/assets/634ce019-81cb-485f-a55f-f45e28764412" />
+
+<img width="1791" height="505" alt="12" src="https://github.com/user-attachments/assets/01e8fbc1-b42e-4892-b900-b35c391898ef" />
 
 ---
 
 ## 🛠️ Google Technologies Used
 
 | Technology | Purpose |
-|-----------|--------|
+|---------|---------|
 | Google Maps JavaScript API | Interactive maps & heatmaps |
-| Google Places API | Competitor discovery & density analysis |
-| Places Insights API | Real-world footfall trends |
-| Gemini 3 Flash | AI market analysis engine |
-| Google Cloud Platform (GCP) | Scalable backend & processing |
-| Google Ecosystem | End-to-end seamless integration |
+| Google Places API | Competitor discovery & density |
+| Places Insights API | Footfall & activity trends |
+| Gemini 3 Flash | AI reasoning & feasibility engine |
+| Google Cloud Platform | Backend & scalability |
+| Google Ecosystem | End-to-end integration |
 
 ---
 
 ## 🏆 Why MarketMapper AI Wins
 
-> **“Not just data, but decisions.”**
-
 ### ❌ Traditional Methods
-- Static & outdated data  
-- Manual surveys  
-- No real footfall insights  
-- Assumption-based decisions  
+- Static & outdated data
+- Manual surveys
+- No footfall visibility
+- Assumption-based decisions
+- High risk of B2B fraud
 
 ### ✅ MarketMapper AI
-- Real-time Google Maps & Places data  
-- AI-driven reasoning using Gemini  
-- Visual heatmap-based clarity  
-- Clear Go / No-Go recommendations  
+- Real-time Google Maps & Places data
+- Gemini-powered AI reasoning
+- Visual heatmap clarity
+- Clear Go / No-Go decisions
+- Verified partners & secure deals
 
 ---
 
 ## 🌍 Real-World Impact
 
-### 🚀 Startups & SMBs
-- Reduced business failure rates  
-- Smarter investment decisions  
-
-### 🏙️ Smart Cities
-- Data-driven urban planning  
-- Optimized business zoning  
-
-### 💰 Financial & Rental Analysis
-- Revenue prediction  
-- Rental feasibility insights  
-
-### 🏛️ Government & Policy Makers
-- Policy planning  
-- Economic development support  
+- 🚀 **Startups & SMBs** – Reduced failure rate
+- 🏙️ **Smart Cities** – Data-driven zoning
+- 💰 **Revenue & Rental Analysis**
+- 🏛️ **Government & Policy Planning**
+- 🌐 **Future Global Trade Enablement**
 
 ---
 
 ## 🔮 Future Scope
 
-- 📈 Revenue forecasting models  
-- 🏠 Rental cost optimization  
-- 🌆 Multi-city comparative analysis  
-- 🏭 Industry-specific AI models  
-- 📊 Enterprise & government dashboards  
-
----
-
-## 📌 Tagline
-
-**MarketMapper AI — Turning locations into opportunities**
+- 📈 Revenue forecasting models
+- 🏠 Rental cost optimization
+- 🌆 Multi-city comparisons
+- 🏭 Industry-specific AI models
+- 📊 Enterprise & government dashboards
 
 ---
 
 ## 📦 Installation & Setup (Prototype)
 
+### Prerequisites
+- Node.js (v18+)
+- npm / yarn
+- Google Cloud account
+- Gemini API key
+
+---
+
+### Clone Repository
 ```bash
-git clone https://github.com/VrajPrajapati6/MarketMapper-Techsprint
+git clone https://github.com/VrajPrajapati6/MarketMapper-Techsprint.git
 cd MarketMapper-Techsprint
-npm install
-npm start
