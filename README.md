@@ -110,10 +110,15 @@ Powered by **Gemini AI**, the system:
 *Trust score, verified collaborations, and ongoing business deals*
 <img width="1919" height="918" alt="1" src="https://github.com/user-attachments/assets/e589feae-f6c2-4d12-ae32-17406bd94d7c" />
 
+---
+
+### 4️⃣ Business Registration & Location Selection
+Users register their business details while selecting an exact geographic location on the map, enabling AI-driven feasibility and location intelligence analysis.
+<img width="1919" height="911" alt="5" src="https://github.com/user-attachments/assets/af5cd9a7-4cc7-4198-948b-95be4d5e973e" />
 
 ---
 
-### 4️⃣ Secure Digital Contract Management  
+### 5️⃣ Secure Digital Contract Management  
 *End-to-end verified business agreement with secure deal execution*
 <img width="1919" height="687" alt="10" src="https://github.com/user-attachments/assets/ca82aa7c-dbab-4ec5-9259-f18b3337eab5" />
 
