@@ -191,7 +191,7 @@ app.post(
       await newReport.save();
     }
 
-    const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
+    const model = genAI.getGenerativeModel({ model: "gemini-3-flash-preview" });
 
     const prompt = `
     Act as an expert Business Consultant and Market Analyst.
@@ -552,11 +552,16 @@ app.get("/login", (req, res) => {
 
 app.post(
   "/login",
+  saveUrl, 
   passport.authenticate("local", {
     failureRedirect: "/login",
     failureFlash: true,
-    successRedirect: "/dashboard",
-  })
+  }),
+  (req, res) => {
+    req.flash("success", "Welcome back to MarketMapper!");
+    const redirectUrl = res.locals.url || "/dashboard"; 
+    res.redirect(redirectUrl);
+  }
 );
 
 app.post(
@@ -564,23 +569,37 @@ app.post(
   wrapAsync(async (req, res, next) => {
     try {
       const { username, email, password } = req.body;
+      const existingUser = await User.findOne({ email });
+      if (existingUser) {
+        req.flash("error", "An account with this email already exists. Please Sign In.");
+        return res.redirect("/login");
+      }
+
       const user = new User({ email, username });
       const registeredUser = await User.register(user, password);
+
       req.login(registeredUser, (err) => {
         if (err) return next(err);
-        req.flash("success", "Welcome to MarketMapper AI!");
-        res.redirect("/dashboard");
+        
+        req.flash("success", "Neural Identity Created. Welcome to MarketMapper!");
+        const redirectUrl = req.session.redirectUrl || "/dashboard";
+        delete req.session.redirectUrl; 
+        res.redirect(redirectUrl);
       });
+
     } catch (e) {
       req.flash("error", e.message);
-      res.redirect("/login");
+      res.redirect("/login"); 
     }
   })
 );
 
 app.get(
   "/auth/google",
-  passport.authenticate("google", { scope: ["profile", "email"] })
+  passport.authenticate("google", { 
+    scope: ["profile", "email"], 
+    prompt: "select_account" 
+  })
 );
 
 app.get(
@@ -591,8 +610,9 @@ app.get(
     failureFlash: true,
   }),
   (req, res) => {
-    req.flash("success", "Welcome to MarketMapper!!");
+    req.flash("success", `Welcome, ${req.user.username}!`);
     const redirectUrl = res.locals.url || "/dashboard";
+    delete req.session.redirectUrl;
     res.redirect(redirectUrl);
   }
 );
@@ -624,7 +644,7 @@ app.get("/profile/edit", isLoggedIn, (req, res) => {
   res.render("editProfile", {
     title: "Edit Neural Identity",
     link: "profile",
-    score: 0, // 👈 Default value so the template doesn't crash
+    score: 0,
   });
 });
 
@@ -639,8 +659,6 @@ app.get(
       .populate("pendingRequests", "username email image")
       .populate("connections", "username email image reputationScore");
 
-    // 🟢 DYNAMIC SCORE CALCULATION FOR PROFILE
-    // We calculate based on the specific user being viewed
     const reportCount = await Report.countDocuments({ author: id });
     const contractCount = await Agreement.countDocuments({
         $or: [{ sender: id }, { receiver: id }]
@@ -653,7 +671,7 @@ app.get(
       title: "Neural Profile",
       link: "profile",
       user,
-      score: calculatedScore, // 👈 THIS FIXES THE "score is not defined" ERROR
+      score: calculatedScore 
     });
   })
 );

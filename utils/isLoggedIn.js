@@ -1,8 +1,10 @@
 module.exports = (req, res, next) => {
-  if (req.isAuthenticated()) next();
-  else {
-    req.session.redirectUrl = req.originalUrl;
-    req.flash("error" , "You are not authenticated to perform this operation .")
-    res.redirect("/login");
+  if (req.isAuthenticated()) {
+    return next();
   }
+  if (req.method === "GET") {
+    req.session.redirectUrl = req.originalUrl;
+  }
+  req.flash("error", "You must be signed in first!");
+  res.redirect("/login");
 };

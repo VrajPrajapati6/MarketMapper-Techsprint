@@ -25,6 +25,7 @@
     "faker": "^5.5.3",
     "joi": "^17.13.3",
     "method-override": "^3.0.0",
+    "mongodb": "^6.21.0",
     "mongoose": "^8.21.0",
     "multer": "^2.0.2",
     "multer-storage-cloudinary": "^2.2.1",
