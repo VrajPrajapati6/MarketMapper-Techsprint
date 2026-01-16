@@ -422,6 +422,33 @@
         object-fit: cover;
         display: block;
       }
+
+      /* ✅ Hide mobile-only profile dropdown on desktop */
+      @media (min-width: 993px) {
+        .mobile-profile-dropdown {
+          display: none !important;
+        }
+      }
+
+      /* ✅ Hide desktop profile on mobile */
+      @media (max-width: 992px) {
+        .desktop-profile-dropdown {
+          display: none !important;
+        }
+      }
+
+      @media (min-width: 993px) {
+        .mobile-bell-dropdown,
+        .mobile-profile-dropdown {
+          display: none !important;
+        }
+      }
+
+      @media (max-width: 992px) {
+        .user-actions {
+          display: none !important;
+        }
+      }
     </style>
   </head>
   <body>
@@ -534,7 +561,7 @@
           </ul>
         </div>
 
-        <div class="dropdown">
+        <div class="dropdown mobile-profile-dropdown">
           <button
             class="mobile-profile-circle"
             id="mobileProfileDropdown"
