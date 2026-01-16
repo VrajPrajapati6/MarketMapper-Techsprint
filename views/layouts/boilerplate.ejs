@@ -375,6 +375,53 @@
           border-radius: 16px;
         }
       }
+
+      @media (max-width: 992px) {
+        /* Fix notification pills layout */
+        .mobile-bell-dropdown .nav.nav-pills {
+          display: flex;
+          flex-direction: column; /* stack vertically */
+          gap: 8px;
+          background: transparent !important;
+          border-radius: 0 !important;
+          padding: 0 !important;
+        }
+
+        .mobile-bell-dropdown .nav.nav-pills .nav-link {
+          width: 100%;
+          border-radius: 999px;
+          padding: 10px 0;
+          background: rgba(30, 30, 35, 0.9);
+          border: 1px solid rgba(255, 255, 255, 0.08);
+        }
+
+        .mobile-bell-dropdown .nav.nav-pills .nav-link.active {
+          background: rgba(168, 85, 247, 0.25) !important;
+          border-color: rgba(168, 85, 247, 0.4);
+        }
+      }
+
+      .mobile-profile-circle {
+        width: 34px;
+        height: 34px;
+        border-radius: 50%;
+        overflow: hidden;
+
+        padding: 0 !important;
+        border: none !important;
+        background: transparent !important;
+
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+
+      .mobile-profile-circle img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        display: block;
+      }
     </style>
   </head>
   <body>
@@ -432,13 +479,50 @@
             <i class="fa-regular fa-bell"></i>
           </button>
 
-          <ul class="dropdown-menu dropdown-menu-end p-0 overflow-hidden">
-            <li class="text-center py-4 text-secondary small">
-              No pending requests
-            </li>
+          <ul
+            class="dropdown-menu dropdown-menu-end p-0 overflow-hidden"
+            style="min-width: 280px; background: #0f0f11"
+          >
+            <div class="p-3 border-bottom border-secondary border-opacity-25">
+              <h6 class="text-white mb-3 small fw-bold">Network Requests</h6>
 
-            <li
-              class="border-top border-secondary border-opacity-10 text-center py-2"
+              <div class="nav nav-pills nav-fill bg-dark rounded-pill p-1">
+                <button
+                  class="nav-link active small py-1 rounded-pill"
+                  data-bs-toggle="pill"
+                  data-bs-target="#mobile-received"
+                >
+                  Received
+                </button>
+                <button
+                  class="nav-link small py-1 rounded-pill"
+                  data-bs-toggle="pill"
+                  data-bs-target="#mobile-sent"
+                >
+                  Sent
+                </button>
+              </div>
+            </div>
+
+            <div
+              class="tab-content p-2"
+              style="max-height: 350px; overflow-y: auto"
+            >
+              <div class="tab-pane fade show active" id="mobile-received">
+                <div class="text-center py-4 text-secondary small">
+                  No pending requests
+                </div>
+              </div>
+
+              <div class="tab-pane fade" id="mobile-sent">
+                <div class="text-center py-4 text-secondary small">
+                  No sent requests
+                </div>
+              </div>
+            </div>
+
+            <div
+              class="p-2 border-top border-secondary border-opacity-10 text-center"
             >
               <a
                 href="/connections"
@@ -446,16 +530,52 @@
               >
                 Manage All Connections
               </a>
-            </li>
+            </div>
           </ul>
         </div>
 
-        <a href="/profile/<%= currUser._id %>" class="mobile-profile-circle">
-          <img
-            src="<%= currUser.image || 'https://ui-avatars.com/api/?name=' + currUser.username %>"
-            alt="Profile"
-          />
-        </a>
+        <div class="dropdown">
+          <button
+            class="mobile-profile-circle"
+            id="mobileProfileDropdown"
+            data-bs-toggle="dropdown"
+            aria-expanded="false"
+            type="button"
+          >
+            <img
+              src="<%= currUser.image || 'https://ui-avatars.com/api/?name=' + currUser.username %>"
+              alt="Profile"
+            />
+          </button>
+
+          <ul class="dropdown-menu dropdown-menu-end">
+            <li>
+              <h6 class="dropdown-header text-white">
+                <%= currUser.username %>
+              </h6>
+            </li>
+            <li><hr class="dropdown-divider border-secondary opacity-25" /></li>
+            <li>
+              <a
+                class="dropdown-item text-secondary"
+                href="/profile/<%= currUser._id %>"
+              >
+                <i class="fa-regular fa-user me-2"></i> Profile
+              </a>
+            </li>
+            <li>
+              <a class="dropdown-item text-secondary" href="/about">
+                <i class="fa-regular fa-circle-question me-2"></i> About Us
+              </a>
+            </li>
+            <li><hr class="dropdown-divider border-secondary opacity-25" /></li>
+            <li>
+              <a class="dropdown-item text-danger fw-bold" href="/logout">
+                <i class="fa-solid fa-power-off me-2"></i> Logout
+              </a>
+            </li>
+          </ul>
+        </div>
 
         <% } %>
 
