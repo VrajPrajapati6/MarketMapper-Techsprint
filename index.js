@@ -87,7 +87,7 @@ app.use(async (req, res, next) => {
         .populate("pendingRequests", "username image")
         .populate("sentRequests", "username image")
         .populate("connections", "username image");
-
+ 
       res.locals.currUser = fullUser;
     } catch (err) {
       console.error("Auth Middleware Error:", err);
@@ -130,7 +130,6 @@ app.get(
       res.render("home", {
         title: "Dashboard",
         reports: allReports,
-        currUser: req.user,
         contracts: contracts,
         score: calculatedScore, // 👈 Passing the dynamic score to the UI
         count: allReports.length,
@@ -145,7 +144,6 @@ app.get(
         score: 25, // Default for errors
         count: 0,
         link: "dashboard",
-        currUser: req.user,
       });
     }
   })
@@ -732,7 +730,6 @@ app.get(
       title: "Chat",
       chats,
       otherUser,
-      currUser: req.user,
     });
   })
 );
