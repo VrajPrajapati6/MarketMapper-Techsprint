@@ -50,6 +50,75 @@
     color: #a855f7 !important;
     border: 1px solid rgba(168, 85, 247, 0.3);
   }
+
+  @media (max-width: 768px) {
+    #contractTabs {
+      flex-wrap: nowrap;
+      overflow-x: auto;
+      white-space: nowrap;
+      padding: 8px;
+      gap: 8px;
+      scrollbar-width: none;
+    }
+
+    #contractTabs::-webkit-scrollbar {
+      display: none;
+    }
+
+    #contractTabs .nav-item {
+      flex: 0 0 auto;
+    }
+
+    #contractTabs .nav-link {
+      font-size: 0.85rem;
+      padding: 8px 14px;
+    }
+  }
+
+  @media (max-width: 768px) {
+    .glass-panel {
+      padding: 18px;
+      border-radius: 20px;
+    }
+
+    .glass-panel h5 {
+      font-size: 1rem;
+    }
+
+    .glass-panel .text-end {
+      text-align: left !important;
+      margin-top: 6px;
+    }
+
+    .glass-panel .text-end span {
+      font-size: 1.1rem;
+      display: block;
+    }
+
+    .glass-panel .d-flex.justify-content-between {
+      flex-direction: column;
+      gap: 6px;
+    }
+  }
+
+  @media (max-width: 768px) {
+    .glass-panel .d-flex.gap-2.mt-4 {
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .glass-panel .btn {
+      width: 100%;
+      justify-content: center;
+      font-size: 0.85rem;
+      padding: 10px;
+    }
+
+    .glass-panel form {
+      width: 100%;
+    }
+  }
+
 </style>
 
 <div class="container py-5 mt-5">

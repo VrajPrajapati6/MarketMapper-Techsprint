@@ -221,6 +221,160 @@
       .user-actions {
         gap: 20px !important;
       }
+
+      /* 📱 MOBILE NAVBAR FIX */
+      @media (max-width: 992px) {
+        .nav-links-container,
+        .user-actions {
+          display: none !important;
+        }
+
+        .navbar-capsule {
+          padding: 10px 18px;
+          border-radius: 18px;
+        }
+
+        .brand {
+          font-size: 0.95rem;
+          letter-spacing: 1px;
+        }
+      }
+
+      @media (min-width: 993px) {
+        .fa-bars-staggered {
+          display: inline-block !important;
+        }
+      }
+
+      @media (max-width: 992px) {
+        .sidebar-link {
+          padding: 18px 22px;
+          font-size: 1rem;
+        }
+      }
+
+      @media (max-width: 992px) {
+        .navbar-capsule {
+          justify-content: flex-start;
+        }
+
+        .navbar-capsule button {
+          margin-left: 0 !important;
+        }
+      }
+
+      @media (max-width: 992px) {
+        .user-actions {
+          display: none !important;
+        }
+
+        .mobile-bell-btn {
+          background: transparent;
+          border: none;
+          color: #94a3b8;
+          font-size: 1.05rem;
+          margin-left: 14px;
+          position: relative;
+        }
+
+        .mobile-bell-btn:hover {
+          color: #ffffff;
+        }
+
+        .mobile-profile-circle {
+          width: 34px;
+          height: 34px;
+          border-radius: 50%;
+          overflow: hidden;
+          margin-left: 14px;
+          border: 2px solid rgba(255, 255, 255, 0.15);
+          display: flex;
+          align-items: center;
+          justify-content: center;
+        }
+
+        .mobile-profile-circle img {
+          width: 100%;
+          height: 100%;
+          object-fit: cover;
+        }
+      }
+
+      @media (min-width: 993px) {
+        .mobile-bell-btn,
+        .mobile-profile-circle {
+          display: none;
+        }
+      }
+
+      @media (max-width: 992px) {
+        .navbar-capsule {
+          display: flex;
+          align-items: center;
+        }
+
+        .brand {
+          white-space: nowrap;
+          flex-shrink: 0;
+          max-width: calc(100% - 110px);
+        }
+
+        .brand img {
+          margin-right: 8px;
+        }
+
+        button[data-bs-target="#menuSidebar"],
+        .mobile-bell-btn,
+        .mobile-profile-circle {
+          flex-shrink: 0;
+        }
+      }
+      @media (max-width: 992px) {
+        .brand {
+          margin-right: 28px;
+        }
+
+        button[data-bs-target="#menuSidebar"] {
+          margin-right: 2px;
+        }
+
+        .mobile-bell-btn {
+          margin-left: 10px;
+        }
+
+        .mobile-profile-circle {
+          margin-left: 1px;
+        }
+      }
+
+      @media (max-width: 992px) {
+        .brand {
+          margin-right: auto;
+        }
+
+        button[data-bs-target="#menuSidebar"] {
+          margin-right: 2px;
+        }
+
+        .mobile-bell-btn {
+          margin-left: 0px;
+          margin-right: 12px;
+        }
+
+        .mobile-profile-circle {
+          margin-left: 6px;
+        }
+      }
+
+      @media (max-width: 992px) {
+        .mobile-bell-dropdown .dropdown-menu {
+          min-width: 260px;
+          margin-top: 12px;
+          background: #0f0f11;
+          border: 1px solid rgba(255, 255, 255, 0.1);
+          border-radius: 16px;
+        }
+      }
     </style>
   </head>
   <body>
@@ -268,6 +422,42 @@
         >
           <i class="fa-solid fa-bars-staggered fs-5"></i>
         </button>
+        <% if (currUser) { %>
+        <div class="dropdown mobile-bell-dropdown">
+          <button
+            class="btn p-0 border-0 mobile-bell-btn"
+            data-bs-toggle="dropdown"
+            aria-expanded="false"
+          >
+            <i class="fa-regular fa-bell"></i>
+          </button>
+
+          <ul class="dropdown-menu dropdown-menu-end p-0 overflow-hidden">
+            <li class="text-center py-4 text-secondary small">
+              No pending requests
+            </li>
+
+            <li
+              class="border-top border-secondary border-opacity-10 text-center py-2"
+            >
+              <a
+                href="/connections"
+                class="text-purple small text-decoration-none"
+              >
+                Manage All Connections
+              </a>
+            </li>
+          </ul>
+        </div>
+
+        <a href="/profile/<%= currUser._id %>" class="mobile-profile-circle">
+          <img
+            src="<%= currUser.image || 'https://ui-avatars.com/api/?name=' + currUser.username %>"
+            alt="Profile"
+          />
+        </a>
+
+        <% } %>
 
         <div class="user-actions">
           <% if(currUser) { %>
@@ -496,6 +686,28 @@
       </div>
       <div class="offcanvas-body p-2">
         <nav class="mt-3">
+          <a
+            href="/dashboard"
+            class="sidebar-link <%= link === 'dashboard' ? 'active' : '' %>"
+          >
+            <i class="fa-solid fa-house me-3"></i> Dashboard
+          </a>
+
+          <a
+            href="/analysis"
+            class="sidebar-link <%= link === 'analysis' ? 'active' : '' %>"
+          >
+            <i class="fa-solid fa-chart-line me-3"></i> Analysis
+          </a>
+
+          <a
+            href="/businesses"
+            class="sidebar-link <%= link === 'businesses' ? 'active' : '' %>"
+          >
+            <i class="fa-solid fa-building me-3"></i> Businesses
+          </a>
+
+          <hr class="border-secondary opacity-25 mx-3" />
           <a
             href="/posts"
             class="sidebar-link <%= link === 'posts' ? 'active' : '' %>"
