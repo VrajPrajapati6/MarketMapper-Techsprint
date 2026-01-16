@@ -5,15 +5,11 @@ const { ref } = require("process");
 
 const userSchema = new mongoose.Schema({
   username: String,
-  email: {
-    type: String,
-    unique: true,
-  },
-  googleId: String,
-  image: {
-    type: String,
-    default:
-      "https://upload.wikimedia.org/wikipedia/commons/2/2c/Default_pfp.svg",
+  email: { type: String, unique: true },
+  googleId: { type: String, sparse: true }, 
+  image: { 
+    type: String, 
+    default: "https://upload.wikimedia.org/wikipedia/commons/2/2c/Default_pfp.svg" 
   },
   reputationScore: {
     type: Number,
